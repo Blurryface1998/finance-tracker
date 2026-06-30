@@ -1,21 +1,25 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Numeric, Integer, DateTime
+from datetime import UTC, datetime
 from decimal import Decimal
+
+from sqlalchemy import DateTime, Enum, Integer, Numeric, String
+from sqlalchemy.orm import Mapped, mapped_column
+
 from app.database import Base
-from datetime import datetime
+from app.schemas import TransactionType
+
 
 class Transaction(Base):
     """SQLAlchemy model representing a financial transaction."""
 
     __tablename__ = "transactions"
 
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
     description: Mapped[str] = mapped_column(String(50))
-    category: Mapped[str] = mapped_column(String(50))
+    category: Mapped[str] = mapped_column(String(50), index=True)
+    amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    transaction_type: Mapped[TransactionType] = mapped_column(
+        Enum(TransactionType), index=True
+    )
 
-    amount: Mapped[Decimal] = mapped_column(Numeric(10,2))
-
-    type: Mapped[str] = mapped_column(String(10))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(UTC))

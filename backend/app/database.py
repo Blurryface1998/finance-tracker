@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 # SqLite database file
 DATABASE_URL = "sqlite:///./finance.db"
@@ -7,19 +7,16 @@ DATABASE_URL = "sqlite:///./finance.db"
 
 # Engine = connection to DB
 engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False} # needed for SqLite
+    DATABASE_URL, connect_args={"check_same_thread": False}  # needed for SqLite
 )
 
 # Session factory used to create database sessions
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 class Base(DeclarativeBase):
     """Base class for SQLAlchemy ORM models."""
+
     pass
 
 

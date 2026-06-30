@@ -1,6 +1,19 @@
-from pydantic import BaseModel, field_validator
+from datetime import datetime
 from decimal import Decimal
-from typing import Literal
+from enum import Enum
+from typing import Generic, TypeVar
+
+from pydantic import BaseModel, ConfigDict, field_validator
+
+ResponseItem = TypeVar("ResponseItem")
+
+
+class TransactionType(str, Enum):
+    """Supported transaction categories used by the API."""
+
+    income = "income"
+    expense = "expense"
+
 
 class TransactionBase(BaseModel):
     """Base schema for transaction data shared across request and response models."""
@@ -9,42 +22,55 @@ class TransactionBase(BaseModel):
     amount: Decimal
     category: str
 
-    @field_validator('description', 'category', mode='before')
+    @field_validator("description", "category", mode="before")
     @classmethod
-    def clean_text(cls, value: str) -> str:
+    def normalize_text(cls, value: str) -> str:
         """Normalize text values for description and category."""
         value = value.strip()
 
         if len(value) < 1 or len(value) > 50:
             raise ValueError("Must be between 1 and 50")
-        
+
         return value.title()
 
-    @field_validator('amount')
+    @field_validator("amount")
     @classmethod
-    def validate(cls, value: Decimal) -> Decimal:
-        "Normalize decimal value for amount"
+    def validate_amount(cls, value: Decimal) -> Decimal:
+        "Validate that the amount is greater than 0"
         if value <= 0:
             raise ValueError("Amount must be more than 0")
         return value
 
+
 class TransactionCreate(TransactionBase):
     """Schema for creating a new transaction."""
 
-    type: Literal["income", "expense"]
-    
+    transaction_type: TransactionType
+
 
 class TransactionResponse(TransactionBase):
     """Schema returned by the API for transaction records."""
 
     id: int
-    type: str
+    transaction_type: TransactionType
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TransactionUpdate(TransactionBase):
     """Schema used to update an existing transaction."""
 
-    type: Literal["income", "expenses"]
+    transaction_type: TransactionType
+
+
+class TransactionPatch(BaseModel):
+    """Schema for partial transaction updates."""
+
+    description: str | None = None
+    amount: Decimal | None = None
+    category: str | None = None
+    transaction_type: TransactionType | None = None
 
 
 class CategorySummary(BaseModel):
@@ -52,3 +78,22 @@ class CategorySummary(BaseModel):
 
     category: str
     total: Decimal
+
+
+class MonthlySummary(BaseModel):
+    """Schema for monthly income, expense, and balance summary data."""
+
+    month: str
+    income: Decimal
+    expense: Decimal
+    balance: Decimal
+
+
+class PaginatedResponse(BaseModel, Generic[ResponseItem]):
+    """Generic paginated response payload for list endpoints."""
+
+    items: list[ResponseItem]
+    next_cursor: int | None
+    has_next: bool
+
+    model_config = ConfigDict(from_attributes=True)
