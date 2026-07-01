@@ -5,12 +5,12 @@ from app.schemas import PaginationCursor, PaginationResult
 ModelType = TypeVar("ModelType")
 
 
-def apply_cursor_filter(query, cursor, order_spec):
+def apply_cursor_filter(query, cursor, order_spec, model):
     conditions = []
 
     for field in order_spec.fields:
-        column = getattr(Transaction, field.name)
-        value = cursor.values(field.name)
+        column = getattr(model, field.name)
+        value = cursor_dict[field.name]
 
         if field.direction == "desc":
             conditions.append(column < value)
