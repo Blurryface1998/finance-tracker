@@ -1,21 +1,32 @@
 from decimal import Decimal
 from typing import Annotated
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app.schemas import (CategorySummary, PaginatedResponse, TransactionCreate,
-                         TransactionPatch, TransactionResponse,
-                         TransactionType, TransactionUpdate)
-from app.services.analytics_services import (get_category_summary,
-                                             get_monthly_summary)
-from app.services.transaction_services import (create_transaction,
-                                               delete_transaction,
-                                               get_transaction,
-                                               get_transactions,
-                                               patch_transaction,
-                                               update_transaction)
+from app.core.database import get_db
+from app.schemas import (
+    CategorySummary,
+    PaginatedResponse,
+    TransactionCreate,
+    TransactionPatch,
+    TransactionResponse,
+    TransactionType,
+    TransactionUpdate,
+    TransactionFilter,
+    PaginationCursor,
+)
+from app.services.analytics_services import get_category_summary, get_monthly_summary
+from app.utils.cursor import decode_cursor
+from app.services.transaction_services import (
+    create_transaction,
+    delete_transaction,
+    get_transaction,
+    get_transactions,
+    patch_transaction,
+    update_transaction,
+)
 
 router = APIRouter()
 
@@ -26,20 +37,21 @@ async def get_transactions_route(
     category: str | None = None,
     min_amount: Decimal | None = None,
     max_amount: Decimal | None = None,
-    limit: int = 20,
-    cursor: int | None = None,
+    limit: int = Query(20, ge=1, le=50),
+    cursor: str | None = None,
     db: Session = Depends(get_db),
 ):
     """Return paginated transactions with optional filters and cursor-based paging."""
-    return get_transactions(
-        db=db,
+    cursors_obj = decode_cursor(cursor) if cursor else None
+
+    filters = TransactionFilter(
         transaction_type=transaction_type,
         category=category,
         min_amount=min_amount,
         max_amount=max_amount,
-        limit=limit,
-        cursor=cursor,
     )
+
+    return get_transactions(db=db, limit=limit, cursor=cursors_obj, filters=filters)
 
 
 @router.get("/transactions/summary")

@@ -1,9 +1,9 @@
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Literal, Any
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 ResponseItem = TypeVar("ResponseItem")
 
@@ -13,6 +13,15 @@ class TransactionType(str, Enum):
 
     income = "income"
     expense = "expense"
+
+
+class OrderField(BaseModel):
+    name: str
+    direction: Literal["asc", "desc"]
+
+
+class OrderSpec(BaseModel):
+    fields: list[OrderField]
 
 
 class TransactionBase(BaseModel):
@@ -73,6 +82,15 @@ class TransactionPatch(BaseModel):
     transaction_type: TransactionType | None = None
 
 
+class TransactionFilter(BaseModel):
+    """Schema for filters for transactions."""
+
+    transaction_type: TransactionType | None = None
+    category: str | None = None
+    min_amount: Decimal | None = None
+    max_amount: Decimal | None = None
+
+
 class CategorySummary(BaseModel):
     """Schema for reporting category totals."""
 
@@ -89,11 +107,28 @@ class MonthlySummary(BaseModel):
     balance: Decimal
 
 
+class PaginationCursor(BaseModel):
+    created_at: datetime
+    id: int
+
+    @model_validator(mode="after")
+    def validate_cursor(self):
+        if self.created_at is None or self.id is None:
+            raise ValueError("Invalid pagination cursor: cursor must not be empty")
+        return self
+
+
+class PaginationResult(BaseModel, Generic[ResponseItem]):
+    items: list[ResponseItem]
+    next_cursor: PaginationCursor | None
+    has_next: bool
+
+
 class PaginatedResponse(BaseModel, Generic[ResponseItem]):
     """Generic paginated response payload for list endpoints."""
 
     items: list[ResponseItem]
-    next_cursor: int | None
+    next_cursor: str | None
     has_next: bool
 
     model_config = ConfigDict(from_attributes=True)

@@ -1,11 +1,24 @@
 from decimal import Decimal
+from typing import TypeVar
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
+from sqlalchemy import and_, or_
 
 from app.models import Transaction
-from app.schemas import (PaginatedResponse, TransactionCreate,
-                         TransactionPatch, TransactionResponse,
-                         TransactionType, TransactionUpdate)
+from app.utils.cursor import encode_cursor
+from app.services.pagination import paginate
+from app.schemas import (
+    PaginatedResponse,
+    TransactionCreate,
+    TransactionPatch,
+    TransactionResponse,
+    TransactionType,
+    TransactionUpdate,
+    PaginationCursor,
+    TransactionFilter,
+    OrderSpec,
+    OrderField,
+)
 
 
 # Helper function
@@ -37,14 +50,32 @@ def create_transaction(db: Session, data: TransactionCreate) -> Transaction:
     return transaction
 
 
+"""
+def apply_transaction_cursor(query, cursor):
+    return query.filter(
+        or_(
+            Transaction.created_at < cursor.created_at,
+            and_(
+                Transaction.created_at == cursor.created_at,
+                Transaction.id < cursor.id,
+            ),
+        )
+    )
+
+
+def build_transaction_cursor(item):
+    return PaginationCursor(
+        created_at=item.created_at,
+        id=item.id,
+    )
+"""
+
+
 def get_transactions(
     db: Session,
-    transaction_type: TransactionType | None = None,
-    category: str | None = None,
-    min_amount: Decimal | None = None,
-    max_amount: Decimal | None = None,
     limit: int = 20,
-    cursor: int | None = None,
+    cursor: PaginationCursor | None = None,
+    filters: TransactionFilter | None = None,
 ) -> PaginatedResponse[TransactionResponse]:
     """Retrieve transactions with optional filters and cursor-based pagination.
 
@@ -61,39 +92,77 @@ def get_transactions(
     Returns:
         A paginated response containing the transactions and pagination metadata.
     """
-    if limit < 1:
-        raise ValueError("limit must be grater than 0")
 
-    base_query = db.query(Transaction).order_by(Transaction.id.desc())
+    query = db.query(Transaction).order_by(
+        Transaction.created_at.desc(), Transaction.id.desc()
+    )
 
-    if transaction_type:
-        base_query = base_query.filter(Transaction.transaction_type == transaction_type)
+    filters = filters or TransactionFilter()
 
-    if category:
-        base_query = base_query.filter(Transaction.category.ilike(f"%{category}%"))
+    if filters.transaction_type:
+        query = query.filter(Transaction.transaction_type == filters.transaction_type)
 
-    if min_amount is not None:
-        base_query = base_query.filter(Transaction.amount >= min_amount)
+    if filters.category:
+        query = query.filter(Transaction.category.ilike(f"%{filters.category}%"))
 
-    if max_amount is not None:
-        base_query = base_query.filter(Transaction.amount <= max_amount)
+    if filters.min_amount is not None:
+        query = query.filter(Transaction.amount >= filters.min_amount)
 
-    if cursor is not None:
-        base_query = base_query.filter(Transaction.id > cursor)
+    if filters.max_amount is not None:
+        query = query.filter(Transaction.amount <= filters.max_amount)
 
-    items = base_query.limit(limit + 1).all()
-    has_next = len(items) > limit
+    if cursor:
+        query = query.filter(
+            (Transaction.created_at, Transaction.id) < (cursor.created_at, cursor.id)
+        )
+    rows = query.limit(limit + 1).all()
 
-    if has_next:
-        items = items[:-1]
+    has_next = len(rows) > limit
+    items = rows[:limit]
 
-    next_cursor = items[-1].id if items else None
+    last = items[-1] if items else None
+
+    next_cursor = (
+        PaginationCursor(created_at=last.created_at, id=last.id)
+        if has_next and last
+        else None
+    )
+
+    return PaginatedResponse(
+        items=items,
+        next_cursor=encode_cursor(next_cursor) if next_cursor else None,
+        has_next=has_next,
+    )
+
+    """
+    order_spec = OrderSpec(
+        fields=[
+            OrderField(name="created_at", direction="desc"),
+            OrderField(name="id", direction="desc"),
+        ]
+    )
+
+    result = paginate(
+        query=query,
+        limit=limit,
+        cursor=cursor,
+        order_spec=order_spec,
+        apply_cursor_filter=apply_transaction_cursor,
+        build_cursor=build_transaction_cursor,
+    )
+
+    items = [
+        TransactionResponse.model_validate(transaction_entity)
+        for transaction_entity in result.items
+    ]
+
+    next_cursor = encode_cursor(result.next_cursor) if result.next_cursor else None
 
     return PaginatedResponse(
         items=items,
         next_cursor=next_cursor,
-        has_next=has_next,
-    )
+        has_next=result.has_next,
+    )"""
 
 
 def get_transaction(db: Session, transaction_id: int) -> Transaction | None:
