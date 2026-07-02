@@ -1,7 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
-from typing import Generic, TypeVar, Literal, Any
+from typing import Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
@@ -13,15 +13,6 @@ class TransactionType(str, Enum):
 
     income = "income"
     expense = "expense"
-
-
-class OrderField(BaseModel):
-    name: str
-    direction: Literal["asc", "desc"]
-
-
-class OrderSpec(BaseModel):
-    fields: list[OrderField]
 
 
 class TransactionBase(BaseModel):
@@ -101,10 +92,17 @@ class CategorySummary(BaseModel):
 class MonthlySummary(BaseModel):
     """Schema for monthly income, expense, and balance summary data."""
 
-    month: str
+    month: int
     income: Decimal
     expense: Decimal
     balance: Decimal
+
+
+class YearlySummary(BaseModel):
+    """Shema for yearly income by months"""
+
+    year: int
+    months: list[MonthlySummary]
 
 
 class PaginationCursor(BaseModel):

@@ -1,24 +1,17 @@
-from decimal import Decimal
-from typing import TypeVar
-
-from sqlalchemy.orm import Session, Query
-from sqlalchemy import and_, or_
+from sqlalchemy.orm import Session
+from sqlalchemy import tuple_
 
 from app.models import Transaction
-from app.utils.cursor import encode_cursor
-from app.services.pagination import paginate
 from app.schemas import (
     PaginatedResponse,
+    PaginationCursor,
     TransactionCreate,
+    TransactionFilter,
     TransactionPatch,
     TransactionResponse,
-    TransactionType,
     TransactionUpdate,
-    PaginationCursor,
-    TransactionFilter,
-    OrderSpec,
-    OrderField,
 )
+from app.utils.cursor import encode_cursor
 
 
 # Helper function
@@ -48,27 +41,6 @@ def create_transaction(db: Session, data: TransactionCreate) -> Transaction:
     db.refresh(transaction)
 
     return transaction
-
-
-"""
-def apply_transaction_cursor(query, cursor):
-    return query.filter(
-        or_(
-            Transaction.created_at < cursor.created_at,
-            and_(
-                Transaction.created_at == cursor.created_at,
-                Transaction.id < cursor.id,
-            ),
-        )
-    )
-
-
-def build_transaction_cursor(item):
-    return PaginationCursor(
-        created_at=item.created_at,
-        id=item.id,
-    )
-"""
 
 
 def get_transactions(
@@ -112,8 +84,10 @@ def get_transactions(
         query = query.filter(Transaction.amount <= filters.max_amount)
 
     if cursor:
+        # Use SQLAlchemy's tuple_ construct for composite column comparison
         query = query.filter(
-            (Transaction.created_at, Transaction.id) < (cursor.created_at, cursor.id)
+            tuple_(Transaction.created_at, Transaction.id)
+            < (cursor.created_at, cursor.id)
         )
     rows = query.limit(limit + 1).all()
 
@@ -133,36 +107,6 @@ def get_transactions(
         next_cursor=encode_cursor(next_cursor) if next_cursor else None,
         has_next=has_next,
     )
-
-    """
-    order_spec = OrderSpec(
-        fields=[
-            OrderField(name="created_at", direction="desc"),
-            OrderField(name="id", direction="desc"),
-        ]
-    )
-
-    result = paginate(
-        query=query,
-        limit=limit,
-        cursor=cursor,
-        order_spec=order_spec,
-        apply_cursor_filter=apply_transaction_cursor,
-        build_cursor=build_transaction_cursor,
-    )
-
-    items = [
-        TransactionResponse.model_validate(transaction_entity)
-        for transaction_entity in result.items
-    ]
-
-    next_cursor = encode_cursor(result.next_cursor) if result.next_cursor else None
-
-    return PaginatedResponse(
-        items=items,
-        next_cursor=next_cursor,
-        has_next=result.has_next,
-    )"""
 
 
 def get_transaction(db: Session, transaction_id: int) -> Transaction | None:

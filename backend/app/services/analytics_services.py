@@ -1,11 +1,11 @@
-from datetime import date, datetime
+from datetime import date, datetime, MINYEAR, MAXYEAR
 from decimal import Decimal
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.models import Transaction
-from app.schemas import CategorySummary, MonthlySummary, TransactionType
+from app.schemas import CategorySummary, MonthlySummary, TransactionType, YearlySummary
 
 
 def get_total_of_type(
@@ -61,8 +61,24 @@ def get_monthly_summary(db: Session, month: str) -> MonthlySummary:
     expense = get_total_of_type(db, TransactionType.expense, start_date, end_date)
 
     return MonthlySummary(
-        month=month, income=income, expense=expense, balance=income - expense
+        month=start_date.month, income=income, expense=expense, balance=income - expense
     )
+
+
+def get_yearly_summary(db: Session, year: str) -> YearlySummary:
+    order_year = int(year)
+
+    if order_year <= 2000 or order_year >= 2100:
+        raise ValueError("Year must be between 2000 and 2100 ")
+
+    months = []
+
+    for month in range(1, 13):
+        month_string = f"{year}-{month:02d}"
+        summary = get_monthly_summary(db=db, month=month_string)
+        months.append(summary)
+
+    return YearlySummary(year=order_year, months=months)
 
 
 def get_category_summary(db: Session) -> list[CategorySummary]:
