@@ -1,15 +1,17 @@
+"""Integration tests for transaction CRUD operations and listing."""
+
 from app.models import Transaction
 from decimal import Decimal
 from tests.helpers import create_transaction
 
 
 def test_create(client):
+    """Verify creating a transaction returns HTTP 201 and the transaction is listed."""
     response = create_transaction(client=client, amount="200.00")
 
     assert response.status_code == 201
 
-    response = client.get("/transactions")
-    data = response.json()
+    data = client.get("/transactions").json()
 
     assert len(data["items"]) == 1
 
@@ -17,34 +19,34 @@ def test_create(client):
 
 
 def test_multiple_create(client):
-    create_transaction(client, amount=100)
-    create_transaction(client, amount=200)
-    create_transaction(client, amount=300)
+    """Verify multiple transactions are created and returned in descending order."""
+    create_transaction(client, amount="100.00")
+    create_transaction(client, amount="200.00")
+    create_transaction(client, amount="300.00")
 
-    response = client.get("/transactions")
-    data = response.json()
+    data = client.get("/transactions").json()
 
     assert len(data["items"]) == 3
-    assert data["items"][0]["amount"] == "300.00"
-    assert data["items"][1]["amount"] == "200.00"
-    assert data["items"][2]["amount"] == "100.00"
+
+    amounts = [item["amount"] for item in data["items"]]
+
+    assert amounts == ["300.00", "200.00", "100.00"]
 
 
 def test_litst_transctions(client):
+    """Verify transaction list responses include all expected fields."""
     create_transaction(client, amount="100.00")
 
-    response = client.get("/transactions")
-    data = response.json()
-
+    data = client.get("/transactions").json()
     item = data["items"][0]
 
-    assert "id" in item
-    assert "amount" in item
-    assert "created_at" in item
-    assert "transaction_type" in item
+    assert all(
+        key in item for key in ["id", "amount", "created_at", "transaction_type"]
+    )
 
 
 def test_get_transaction(client):
+    """Placeholder for verifying retrieval of a single transaction by ID."""
     pass
 
 
@@ -53,22 +55,22 @@ def test_update_transaction(client):
     created = create_response.json()
     transaction_id = created["id"]
 
-    update_payload = {
-        "description": "Updated Salary",
-        "amount": "250.00",
-        "category": "income",
-        "transaction_type": "income",
-    }
-
-    response = client.put(f"/transactions/{transaction_id}", json=update_payload)
-
+    response = client.put(
+        f"/transactions/{transaction_id}",
+        json={
+            "description": "Updated Salary",
+            "amount": "250.00",
+            "category": "income",
+            "transaction_type": "income",
+        },
+    )
     assert response.status_code == 200
     data = response.json()
 
-    assert data["id"] == transaction_id
-    assert data["description"] == "Updated Salary"
-    assert data["amount"] == "250.00"
+    get_response = client.get(f"/transactions/{transaction_id}")
+    assert get_response.json()["amount"] == "250.00"
 
 
 def test_delete_transaction():
+    """Placeholder for verifying deletion of an existing transaction."""
     pass

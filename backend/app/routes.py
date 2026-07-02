@@ -30,6 +30,8 @@ from app.services.transaction_services import (
     patch_transaction,
     update_transaction,
 )
+"""API route definitions for transaction endpoints and summaries."""
+
 from app.utils.cursor import decode_cursor
 
 router = APIRouter(prefix="/transactions")
@@ -76,7 +78,7 @@ async def get_yearly_summary_route(
 
 @router.get("/summary/category", response_model=list[CategorySummary])
 def get_category_summary_route(db: Session = Depends(get_db)):
-    "Return a category summary"
+    """Return a summary of totals grouped by category."""
     return get_category_summary(db)
 
 
@@ -132,6 +134,7 @@ async def update_transaction_route(
 async def patch_transaction_route(
     transaction_id: int, transaction: TransactionPatch, db: Session = Depends(get_db)
 ):
+    """Apply a partial update to a transaction."""
     updated = patch_transaction(db=db, transaction_id=transaction_id, data=transaction)
 
     if not updated:

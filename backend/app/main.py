@@ -1,3 +1,5 @@
+"""FastAPI app creation and database initialization."""
+
 from fastapi import FastAPI
 
 from app.core.database import Base, engine

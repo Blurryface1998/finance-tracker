@@ -1,3 +1,5 @@
+"""Test configuration and fixtures for the finance tracker backend."""
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, StaticPool
@@ -18,6 +20,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 # Create tables once
 @pytest.fixture(scope="session", autouse=True)
 def setup_database():
+    """Create the test database schema once for the test session."""
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
@@ -25,12 +28,14 @@ def setup_database():
 
 @pytest.fixture(autouse=True)
 def reset_db():
+    """Reset the in-memory database schema between test cases."""
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
 
 # Dependency override (ONLY DB CONTROL POINT)
 def override_get_db():
+    """Provide a test database session for endpoint dependency injection."""
     db = TestingSessionLocal()
     try:
         yield db

@@ -1,3 +1,5 @@
+"""Transaction schema definitions for requests, responses, and pagination."""
+
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
@@ -36,7 +38,7 @@ class TransactionBase(BaseModel):
     @field_validator("amount")
     @classmethod
     def validate_amount(cls, value: Decimal) -> Decimal:
-        "Validate that the amount is greater than 0"
+        """Validate that the amount is greater than 0."""
         if value <= 0:
             raise ValueError("Amount must be more than 0")
         return value
@@ -99,13 +101,15 @@ class MonthlySummary(BaseModel):
 
 
 class YearlySummary(BaseModel):
-    """Shema for yearly income by months"""
+    """Schema for a yearly summary containing monthly totals."""
 
     year: int
     months: list[MonthlySummary]
 
 
 class PaginationCursor(BaseModel):
+    """Cursor payload used for cursor-based pagination."""
+
     created_at: datetime
     id: int
 

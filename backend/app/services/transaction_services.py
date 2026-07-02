@@ -1,3 +1,5 @@
+"""Transaction service operations for CRUD, filtering, and pagination."""
+
 from sqlalchemy.orm import Session
 from sqlalchemy import tuple_
 
@@ -53,13 +55,9 @@ def get_transactions(
 
     Args:
         db: SQLAlchemy session instance.
-        transaction_type: Optional filter by transaction type: 'income' or 'expense'.
-        category: Optional partial, case-insensitive category match.
-        min_amount: Optional minimum amount filter.
-        max_amount: Optional maximum amount filter.
         limit: Maximum number of transactions to return per page.
-        cursor: The last transaction ID from the previous page; only records with a
-            larger ID are returned.
+        cursor: Pagination cursor identifying the last record from the previous page.
+        filters: Optional filters to apply to the transaction query.
 
     Returns:
         A paginated response containing the transactions and pagination metadata.

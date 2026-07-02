@@ -1,3 +1,5 @@
+"""Cursor encoding and decoding utilities for pagination."""
+
 import base64
 import json
 from datetime import datetime
@@ -6,6 +8,7 @@ from app.schemas import PaginationCursor
 
 
 def encode_cursor(cursor: PaginationCursor) -> str:
+    """Encode a pagination cursor to a URL-safe string."""
     payload = {
         "created_at": cursor.created_at.isoformat(),
         "id": cursor.id,
@@ -16,6 +19,7 @@ def encode_cursor(cursor: PaginationCursor) -> str:
 
 
 def decode_cursor(cursor_str: str) -> PaginationCursor:
+    """Decode a URL-safe cursor string into a PaginationCursor."""
     raw = base64.urlsafe_b64decode(cursor_str.encode("utf-8"))
     data = json.loads(raw.decode("utf-8"))
 

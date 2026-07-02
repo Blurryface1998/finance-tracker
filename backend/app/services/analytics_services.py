@@ -1,3 +1,5 @@
+"""Analytics service functions for transaction summaries and category totals."""
+
 from datetime import date, datetime, MINYEAR, MAXYEAR
 from decimal import Decimal
 
@@ -30,7 +32,7 @@ def get_month_range(month: str) -> tuple:
     """Convert a month string into a date range.
 
     Args:
-        month: Month string in format 'YYYY-m'.
+        month: Month string in format 'YYYY-MM'.
 
     Returns:
         A tuple of (start_date, end_date) for the month.
@@ -66,6 +68,15 @@ def get_monthly_summary(db: Session, month: str) -> MonthlySummary:
 
 
 def get_yearly_summary(db: Session, year: str) -> YearlySummary:
+    """Generate a yearly summary of monthly income and expenses.
+
+    Args:
+        db: SQLAlchemy session instance.
+        year: Year string in format 'YYYY'.
+
+    Returns:
+        A YearlySummary with all 12 monthly summaries.
+    """
     order_year = int(year)
 
     if order_year <= 2000 or order_year >= 2100:
