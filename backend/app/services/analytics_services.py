@@ -1,13 +1,14 @@
 """Analytics service functions for transaction summaries and category totals."""
 
-from datetime import date, datetime, MINYEAR, MAXYEAR
+from datetime import date, datetime
 from decimal import Decimal
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.models import Transaction
-from app.schemas import CategorySummary, MonthlySummary, TransactionType, YearlySummary
+from app.schemas import (CategorySummary, MonthlySummary, TransactionType,
+                         YearlySummary)
 
 
 def get_total_of_type(

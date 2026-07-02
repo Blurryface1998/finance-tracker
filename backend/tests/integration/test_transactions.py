@@ -1,7 +1,6 @@
 """Integration tests for transaction CRUD operations and listing."""
 
-from app.models import Transaction
-from decimal import Decimal
+
 from tests.helpers import create_transaction
 
 
