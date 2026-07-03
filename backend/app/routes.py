@@ -7,32 +7,19 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.schemas import (
-    CategorySummary,
-    MonthlySummary,
-    PaginatedResponse,
-    TransactionCreate,
-    TransactionFilter,
-    TransactionPatch,
-    TransactionResponse,
-    TransactionType,
-    TransactionUpdate,
-    YearlySummary,
-)
-from app.services.analytics_services import (
-    get_category_summary,
-    get_monthly_summary,
-    get_yearly_summary,
-)
-from app.services.transaction_services import (
-    create_transaction,
-    delete_transaction,
-    get_transaction,
-    get_transactions,
-    patch_transaction,
-    update_transaction,
-)
-
+from app.schemas import (CategorySummary, MonthlySummary, PaginatedResponse,
+                         TransactionCreate, TransactionFilter,
+                         TransactionPatch, TransactionResponse,
+                         TransactionType, TransactionUpdate, YearlySummary)
+from app.services.analytics_services import (get_category_summary,
+                                             get_monthly_summary,
+                                             get_yearly_summary)
+from app.services.transaction_services import (create_transaction,
+                                               delete_transaction,
+                                               get_transaction,
+                                               get_transactions,
+                                               patch_transaction,
+                                               update_transaction)
 from app.utils.cursor import decode_cursor
 
 router = APIRouter(prefix="/transactions")
@@ -49,7 +36,10 @@ async def get_transactions_route(
     db: Session = Depends(get_db),
 ):
     """Return paginated transactions with optional filters and cursor-based paging."""
-    cursors_obj = decode_cursor(cursor) if cursor else None
+    try:
+        cursors_obj = decode_cursor(cursor) if cursor else None
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail="Invalid cursor") from exc
 
     filters = TransactionFilter(
         transaction_type=transaction_type,

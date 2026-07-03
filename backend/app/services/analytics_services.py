@@ -7,8 +7,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.models import Transaction
-from app.schemas import (CategorySummary, MonthlySummary, TransactionType,
-                         YearlySummary)
+from app.schemas import CategorySummary, MonthlySummary, TransactionType, YearlySummary
 
 
 def get_total_of_type(
@@ -53,7 +52,7 @@ def get_monthly_summary(db: Session, month: str) -> MonthlySummary:
 
     Args:
         db: SQLAlchemy session instance.
-        month: Month string in format 'YYYY-m'.
+        month: Month string in format 'YYYY-mm'.
 
     Returns:
         A dictionary with month, income, expense, and balance.

@@ -1,9 +1,13 @@
 """Test helpers for generating transaction payloads and requests."""
 
+from app.models import Transaction
+from datetime import datetime
+
 TRANSACTIONS_URL = "/transactions"
+SUMMARY_URL = "/transactions/summary"
 
 
-def transaction_payload(**overides):
+def transaction_payload(**overrides):
     """Build a default transaction payload and apply any overrides."""
     base = {
         "description": "salary",
@@ -11,13 +15,30 @@ def transaction_payload(**overides):
         "category": "income",
         "transaction_type": "income",
     }
-    base.update(overides)
+    base.update(overrides)
     return base
 
 
-def create_transaction(client, **overrides):
+def create_transaction(client, db=None, created_at=None, **overrides):
     """Send a create transaction request through the test client."""
-    return client.post(TRANSACTIONS_URL, json=transaction_payload(**overrides))
+    payload_overrides = overrides.copy()
+
+    payload_overrides.pop("created_at", None)
+
+    response = client.post(
+        TRANSACTIONS_URL, json=transaction_payload(**payload_overrides)
+    )
+
+    if db is not None and created_at is not None:
+        transaction_id = response.json()["id"]
+
+        transaction = db.get(Transaction, transaction_id)
+        transaction.created_at = created_at
+
+        db.commit()
+        db.refresh(transaction)
+
+    return response
 
 
 def create_transaction_json(client, **overrides):
