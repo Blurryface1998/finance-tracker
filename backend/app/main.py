@@ -1,4 +1,4 @@
-"""FastAPI app creation and database initialization."""
+"""Create and configure the FastAPI application for the finance tracker backend."""
 
 from fastapi import FastAPI
 

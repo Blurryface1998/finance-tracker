@@ -1,3 +1,5 @@
+"""API route definitions for transaction endpoints and summaries."""
+
 from decimal import Decimal
 from typing import Annotated
 
@@ -5,21 +7,31 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.schemas import (CategorySummary, MonthlySummary, PaginatedResponse,
-                         TransactionCreate, TransactionFilter,
-                         TransactionPatch, TransactionResponse,
-                         TransactionType, TransactionUpdate, YearlySummary)
-from app.services.analytics_services import (get_category_summary,
-                                             get_monthly_summary,
-                                             get_yearly_summary)
-from app.services.transaction_services import (create_transaction,
-                                               delete_transaction,
-                                               get_transaction,
-                                               get_transactions,
-                                               patch_transaction,
-                                               update_transaction)
-
-"""API route definitions for transaction endpoints and summaries."""
+from app.schemas import (
+    CategorySummary,
+    MonthlySummary,
+    PaginatedResponse,
+    TransactionCreate,
+    TransactionFilter,
+    TransactionPatch,
+    TransactionResponse,
+    TransactionType,
+    TransactionUpdate,
+    YearlySummary,
+)
+from app.services.analytics_services import (
+    get_category_summary,
+    get_monthly_summary,
+    get_yearly_summary,
+)
+from app.services.transaction_services import (
+    create_transaction,
+    delete_transaction,
+    get_transaction,
+    get_transactions,
+    patch_transaction,
+    update_transaction,
+)
 
 from app.utils.cursor import decode_cursor
 
@@ -71,11 +83,15 @@ def get_category_summary_route(db: Session = Depends(get_db)):
     return get_category_summary(db)
 
 
-@router.get("/{transaction_id}", response_model=TransactionResponse)
+@router.get(
+    "/{transaction_id}",
+    response_model=TransactionResponse,
+    status_code=status.HTTP_200_OK,
+)
 async def get_transaction_route(
     transaction_id: int,
     db: Session = Depends(get_db),
-):
+) -> TransactionResponse:
     """Return a single transaction by ID."""
     transaction = get_transaction(db=db, transaction_id=transaction_id)
 
@@ -119,7 +135,11 @@ async def update_transaction_route(
     return updated_transaction
 
 
-@router.patch("/{transaction_id}", response_model=TransactionResponse)
+@router.patch(
+    "/{transaction_id}",
+    response_model=TransactionResponse,
+    status_code=status.HTTP_200_OK,
+)
 async def patch_transaction_route(
     transaction_id: int, transaction: TransactionPatch, db: Session = Depends(get_db)
 ):
@@ -132,7 +152,7 @@ async def patch_transaction_route(
     return updated
 
 
-@router.delete("/{transaction_id}", status_code=204)
+@router.delete("/{transaction_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_transaction_route(
     transaction_id: int,
     db: Session = Depends(get_db),

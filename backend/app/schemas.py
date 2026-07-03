@@ -74,6 +74,25 @@ class TransactionPatch(BaseModel):
     category: str | None = None
     transaction_type: TransactionType | None = None
 
+    @field_validator("description", "category", mode="before")
+    @classmethod
+    def normalize_text(cls, value: str) -> str:
+        """Normalize text values for description and category."""
+        value = value.strip()
+
+        if len(value) < 1 or len(value) > 50:
+            raise ValueError("Must be between 1 and 50")
+
+        return value.title()
+
+    @field_validator("amount")
+    @classmethod
+    def validate_amount(cls, value: Decimal) -> Decimal:
+        """Validate that the amount is greater than 0."""
+        if value <= 0:
+            raise ValueError("Amount must be more than 0")
+        return value
+
 
 class TransactionFilter(BaseModel):
     """Schema for filters for transactions."""
@@ -115,12 +134,15 @@ class PaginationCursor(BaseModel):
 
     @model_validator(mode="after")
     def validate_cursor(self):
+        """Ensure the cursor contains the required pagination values."""
         if self.created_at is None or self.id is None:
             raise ValueError("Invalid pagination cursor: cursor must not be empty")
         return self
 
 
 class PaginationResult(BaseModel, Generic[ResponseItem]):
+    """Container for paginated query results before they are serialized."""
+
     items: list[ResponseItem]
     next_cursor: PaginationCursor | None
     has_next: bool
