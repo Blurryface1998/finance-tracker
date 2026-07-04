@@ -151,6 +151,58 @@ def test_patch_transaction_multiple_fields(client):
     assert data["amount"] == "100.00"
 
 
+def test_patch_transaction_type_only(client):
+    create_response = create_transaction(client)
+    created = create_response.json()
+    transaction_id = created["id"]
+
+    response = client.patch(
+        transactions_url(transaction_id),
+        json={"transaction_type": "expense"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["transaction_type"] == "expense"
+
+
+def test_patch_transaction_invalid_description_length(client):
+    create_response = create_transaction(client)
+    created = create_response.json()
+    transaction_id = created["id"]
+
+    response = client.patch(
+        transactions_url(transaction_id),
+        json={"description": "a" * 51},
+    )
+
+    assert response.status_code == 422
+
+
+def test_patch_transaction_invalid_category_length(client):
+    create_response = create_transaction(client)
+    created = create_response.json()
+    transaction_id = created["id"]
+
+    response = client.patch(
+        transactions_url(transaction_id),
+        json={"category": "b" * 51},
+    )
+
+    assert response.status_code == 422
+
+
+def test_patch_transaction_preserves_created_at(client):
+    create_response = create_transaction(client)
+    created = create_response.json()
+    transaction_id = created["id"]
+    original_created_at = created["created_at"]
+
+    response = client.patch(transactions_url(transaction_id), json={"amount": "200.00"})
+
+    assert response.status_code == 200
+    assert response.json()["created_at"] == original_created_at
+
+
 def test_patch_transaction_not_found(client):
     response = client.patch(transactions_url(9999), json={"amount": "200.00"})
 

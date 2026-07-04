@@ -1,11 +1,49 @@
-Need to learn list comprehensions for this part:
-def get_category_summary_service(db: Session):
-query = db.query(Transaction.category, func.sum(Transaction.amount)).group_by(Transaction.category)
+# Finance Tracker Backend
 
-    # List comprehensions
-    result = []
+This folder contains the backend API for the finance tracker project.
 
-    for category, total in query:
-        result.append(CategorySummary(category=category, total=total))
+## Terminal commands
 
-    return result
+### Activate the virtual environment
+
+From `finance-tracker/backend` run:
+
+```bash
+source ../.venv/bin/activate
+```
+
+If you prefer direct invocation, use:
+
+```bash
+/home/djordje/Desktop/pyton_project/finance-tracker/.venv/bin/python
+```
+
+### Start the API (if you have a FastAPI runner configured)
+
+Use your preferred FastAPI startup command, for example:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+### Format code
+
+Run `isort` to sort imports:
+
+```bash
+isort app tests
+isort .
+```
+
+Run `ruff` to lint and fix issues:
+
+```bash
+ruff check app tests
+ruff check app tests --fix
+ruff check . --fix
+```
+
+### Notes
+
+- Keep this file focused on backend runtime and tooling commands.
+- Use `backend/tests/README.md` for test-specific instructions.

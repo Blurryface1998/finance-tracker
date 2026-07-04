@@ -43,6 +43,36 @@ def test_create_invalid_type_fails(client):
     assert response.status_code == 422
 
 
+def test_create_transaction_type_non_string_fails(client):
+    response = create_transaction(client, transaction_type=123)
+
+    assert response.status_code == 422
+
+
+def test_create_invalid_description_length_fails(client):
+    response = create_transaction(client, description="a" * 51)
+
+    assert response.status_code == 422
+
+
+def test_create_invalid_category_length_fails(client):
+    response = create_transaction(client, category="b" * 51)
+
+    assert response.status_code == 422
+
+
+def test_create_whitespace_only_description_fails(client):
+    response = create_transaction(client, description="   ")
+
+    assert response.status_code == 422
+
+
+def test_create_whitespace_only_category_fails(client):
+    response = create_transaction(client, category="   ")
+
+    assert response.status_code == 422
+
+
 def test_create_normalization(client):
     response = create_transaction(
         client, description="  salary payment  ", category="  income  "

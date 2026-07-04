@@ -1,7 +1,7 @@
 """Test helpers for generating transaction payloads and requests."""
 
+
 from app.models import Transaction
-from datetime import datetime
 
 TRANSACTIONS_URL = "/transactions"
 SUMMARY_URL = "/transactions/summary"
@@ -21,13 +21,14 @@ def transaction_payload(**overrides):
 
 def create_transaction(client, db=None, created_at=None, **overrides):
     """Send a create transaction request through the test client."""
-    payload_overrides = overrides.copy()
-
-    payload_overrides.pop("created_at", None)
+    payload_overrides = {k: v for k, v in overrides.items() if k != "created_at"}
 
     response = client.post(
         TRANSACTIONS_URL, json=transaction_payload(**payload_overrides)
     )
+
+    if created_at is not None and db is None:
+        raise ValueError("db is required when created_at is provided")
 
     if db is not None and created_at is not None:
         transaction_id = response.json()["id"]

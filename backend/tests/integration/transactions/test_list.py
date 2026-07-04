@@ -1,5 +1,6 @@
 """List, filter, and read transaction integration tests."""
 
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from tests.helpers import (TRANSACTIONS_URL, create_transaction,
@@ -103,6 +104,59 @@ def test_get_transactions_amount_range(client):
     amounts = [Decimal(item["amount"]) for item in data["items"]]
 
     assert all(50 <= amount <= 150 for amount in amounts)
+
+
+def test_get_transactions_combined_filters(client):
+    create_transaction(client, transaction_type="income", category="food", amount="100.00")
+    create_transaction(client, transaction_type="expense", category="food", amount="50.00")
+    create_transaction(client, transaction_type="income", category="travel", amount="200.00")
+
+    response = client.get(f"{TRANSACTIONS_URL}?transaction_type=income&category=food")
+    data = response.json()
+
+    assert response.status_code == 200
+    assert len(data["items"]) == 1
+    assert data["items"][0]["transaction_type"] == "income"
+    assert data["items"][0]["category"] == "Food"
+
+
+def test_get_transactions_min_and_max_amount_together(client):
+    create_transaction(client, amount="30.00")
+    create_transaction(client, amount="70.00")
+    create_transaction(client, amount="120.00")
+
+    response = client.get(f"{TRANSACTIONS_URL}?min_amount=20&max_amount=100")
+    data = response.json()
+
+    amounts = [Decimal(item["amount"]) for item in data["items"]]
+
+    assert all(20 <= amount <= 100 for amount in amounts)
+
+
+def test_get_transactions_last_page_has_no_cursor(client):
+    for i in range(5):
+        create_transaction(client, amount=str(i + 1))
+
+    response = client.get(f"{TRANSACTIONS_URL}?limit=5")
+    data = response.json()
+
+    assert data["has_next"] is False
+    assert data["next_cursor"] is None
+
+
+def test_get_transactions_same_created_at_maintains_id_order(client, db):
+    same_time = datetime(2026, 7, 1, 12, 0, 0, tzinfo=UTC)
+
+    create_transaction(client, db=db, amount="100.00", created_at=same_time)
+    create_transaction(client, db=db, amount="200.00", created_at=same_time)
+    create_transaction(client, db=db, amount="300.00", created_at=same_time)
+
+    response = client.get(f"{TRANSACTIONS_URL}")
+    data = response.json()
+
+    ids = [item["id"] for item in data["items"]]
+
+    assert ids == sorted(ids, reverse=True)
 
 
 def test_get_trasactions_cursor_pagination(client):

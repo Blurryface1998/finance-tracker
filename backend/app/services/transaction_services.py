@@ -3,6 +3,7 @@
 from sqlalchemy import tuple_
 from sqlalchemy.orm import Session
 
+from app.core.exceptions.transactions import TransactionNotFoundError
 from app.models import Transaction
 from app.schemas import (PaginatedResponse, PaginationCursor,
                          TransactionCreate, TransactionFilter,
@@ -14,7 +15,11 @@ from app.utils.cursor import encode_cursor
 # Helper function
 def _get_transaction(db: Session, transaction_id: int) -> Transaction | None:
     """Return a transaction by ID, or None if it does not exist."""
-    return db.get(Transaction, transaction_id)
+    transaction = db.get(Transaction, transaction_id)
+
+    if not transaction:
+        raise TransactionNotFoundError(transaction_id)
+    return transaction
 
 
 def create_transaction(db: Session, data: TransactionCreate) -> Transaction:
@@ -130,9 +135,6 @@ def update_transaction(
     """
     transaction = _get_transaction(db, transaction_id)
 
-    if not transaction:
-        return None
-
     transaction.description = data.description
     transaction.amount = data.amount
     transaction.category = data.category
@@ -156,13 +158,8 @@ def delete_transaction(db: Session, transaction_id: int) -> Transaction | None:
     """
     transaction = _get_transaction(db, transaction_id)
 
-    if not transaction:
-        return None
-
     db.delete(transaction)
     db.commit()
-
-    return transaction
 
 
 def patch_transaction(
@@ -179,9 +176,6 @@ def patch_transaction(
         The updated Transaction instance, or None if not found.
     """
     transaction = _get_transaction(db, transaction_id)
-
-    if not transaction:
-        return None
 
     if data.description is not None:
         transaction.description = data.description.strip().title()

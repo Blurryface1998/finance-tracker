@@ -17,6 +17,10 @@ class TransactionType(str, Enum):
     expense = "expense"
 
 
+class ErrorResponse(BaseModel):
+    error: dict
+
+
 class TransactionBase(BaseModel):
     """Base schema for transaction data shared across request and response models."""
 

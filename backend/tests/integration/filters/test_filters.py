@@ -45,3 +45,26 @@ def test_filter_by_max_amount(client):
 
     assert response.status_code == 200
     assert all(float(item["amount"]) <= 50 for item in data["items"])
+
+
+def test_filter_invalid_min_amount(client):
+    response = client.get(f"{TRANSACTIONS_URL}?min_amount=abc")
+
+    assert response.status_code == 422
+
+
+def test_filter_invalid_transaction_type(client):
+    response = client.get(f"{TRANSACTIONS_URL}?transaction_type=bad")
+
+    assert response.status_code == 422
+
+
+def test_filter_by_category_case_insensitive(client):
+    create_transaction(client, category="Food")
+    create_transaction(client, category="Travel")
+
+    response = client.get(f"{TRANSACTIONS_URL}?category=food")
+    data = response.json()
+
+    assert response.status_code == 200
+    assert all(item["category"] == "Food" for item in data["items"])

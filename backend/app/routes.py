@@ -83,12 +83,7 @@ async def get_transaction_route(
     db: Session = Depends(get_db),
 ) -> TransactionResponse:
     """Return a single transaction by ID."""
-    transaction = get_transaction(db=db, transaction_id=transaction_id)
-
-    if not transaction:
-        raise HTTPException(status_code=404, detail="Transaction not found")
-
-    return transaction
+    return get_transaction(db=db, transaction_id=transaction_id)
 
 
 @router.post(
@@ -115,14 +110,7 @@ async def update_transaction_route(
     db: Session = Depends(get_db),
 ):
     """Update an existing transaction by ID."""
-    updated_transaction = update_transaction(
-        db=db, transaction_id=transaction_id, data=transaction
-    )
-
-    if not updated_transaction:
-        raise HTTPException(status_code=404, detail="Transaction not found")
-
-    return updated_transaction
+    return update_transaction(db=db, transaction_id=transaction_id, data=transaction)
 
 
 @router.patch(
@@ -134,12 +122,7 @@ async def patch_transaction_route(
     transaction_id: int, transaction: TransactionPatch, db: Session = Depends(get_db)
 ):
     """Apply a partial update to a transaction."""
-    updated = patch_transaction(db=db, transaction_id=transaction_id, data=transaction)
-
-    if not updated:
-        raise HTTPException(status_code=404, detail="Transaction not found")
-
-    return updated
+    return patch_transaction(db=db, transaction_id=transaction_id, data=transaction)
 
 
 @router.delete("/{transaction_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -148,9 +131,4 @@ async def delete_transaction_route(
     db: Session = Depends(get_db),
 ):
     """Delete an existing transaction by ID."""
-    transaction = delete_transaction(db=db, transaction_id=transaction_id)
-
-    if not transaction:
-        raise HTTPException(status_code=404, detail="Transaction not found")
-
-    return None
+    return delete_transaction(db=db, transaction_id=transaction_id)
