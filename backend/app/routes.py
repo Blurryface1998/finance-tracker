@@ -3,10 +3,11 @@
 from decimal import Decimal
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.exceptions import InvalidCursorError
 from app.schemas import (CategorySummary, MonthlySummary, PaginatedResponse,
                          TransactionCreate, TransactionFilter,
                          TransactionPatch, TransactionResponse,
@@ -39,7 +40,7 @@ async def get_transactions_route(
     try:
         cursors_obj = decode_cursor(cursor) if cursor else None
     except ValueError as exc:
-        raise HTTPException(status_code=422, detail="Invalid cursor") from exc
+        raise InvalidCursorError(cursor=cursor) from exc
 
     filters = TransactionFilter(
         transaction_type=transaction_type,

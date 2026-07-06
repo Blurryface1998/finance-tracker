@@ -10,6 +10,23 @@ from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 ResponseItem = TypeVar("ResponseItem")
 
 
+def normalize_text(value: str) -> str:
+    """Normalize text values for description and category."""
+    value = value.strip()
+
+    if len(value) < 1 or len(value) > 50:
+        raise ValueError("Must be between 1 and 50")
+
+    return value.title()
+
+
+def validate_amount(value: Decimal) -> Decimal:
+    """Validate that the amount is greater than 0."""
+    if value <= 0:
+        raise ValueError("Amount must be more than 0")
+    return value
+
+
 class TransactionType(str, Enum):
     """Supported transaction categories used by the API."""
 
@@ -30,22 +47,13 @@ class TransactionBase(BaseModel):
 
     @field_validator("description", "category", mode="before")
     @classmethod
-    def normalize_text(cls, value: str) -> str:
-        """Normalize text values for description and category."""
-        value = value.strip()
-
-        if len(value) < 1 or len(value) > 50:
-            raise ValueError("Must be between 1 and 50")
-
-        return value.title()
+    def normalize_text_validator(cls, value: str) -> str:
+        return normalize_text(value)
 
     @field_validator("amount")
     @classmethod
-    def validate_amount(cls, value: Decimal) -> Decimal:
-        """Validate that the amount is greater than 0."""
-        if value <= 0:
-            raise ValueError("Amount must be more than 0")
-        return value
+    def validate_amount_validator(cls, value: Decimal) -> Decimal:
+        return validate_amount(value)
 
 
 class TransactionCreate(TransactionBase):
@@ -80,22 +88,13 @@ class TransactionPatch(BaseModel):
 
     @field_validator("description", "category", mode="before")
     @classmethod
-    def normalize_text(cls, value: str) -> str:
-        """Normalize text values for description and category."""
-        value = value.strip()
-
-        if len(value) < 1 or len(value) > 50:
-            raise ValueError("Must be between 1 and 50")
-
-        return value.title()
+    def normalize_text_validator(cls, value: str) -> str:
+        return normalize_text(value)
 
     @field_validator("amount")
     @classmethod
-    def validate_amount(cls, value: Decimal) -> Decimal:
-        """Validate that the amount is greater than 0."""
-        if value <= 0:
-            raise ValueError("Amount must be more than 0")
-        return value
+    def validate_amount_validator(cls, value: Decimal) -> Decimal:
+        return validate_amount(value)
 
 
 class TransactionFilter(BaseModel):
@@ -105,6 +104,16 @@ class TransactionFilter(BaseModel):
     category: str | None = None
     min_amount: Decimal | None = None
     max_amount: Decimal | None = None
+
+    @model_validator(mode="after")
+    def validate_amount_range(self):
+        if (
+            self.min_amount is not None
+            and self.max_amount is not None
+            and self.min_amount > self.max_amount
+        ):
+            raise ValueError("min_amount cannot exceed max_amount")
+        return self
 
 
 class CategorySummary(BaseModel):

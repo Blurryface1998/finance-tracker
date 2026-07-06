@@ -3,6 +3,10 @@
 from datetime import UTC, datetime
 from decimal import Decimal
 
+import pytest
+
+from app.core.exceptions.transactions import TransactionNotFoundError
+from app.services.transaction_services import get_transaction
 from tests.helpers import (TRANSACTIONS_URL, create_transaction,
                            create_transaction_json, transactions_url)
 
@@ -107,9 +111,15 @@ def test_get_transactions_amount_range(client):
 
 
 def test_get_transactions_combined_filters(client):
-    create_transaction(client, transaction_type="income", category="food", amount="100.00")
-    create_transaction(client, transaction_type="expense", category="food", amount="50.00")
-    create_transaction(client, transaction_type="income", category="travel", amount="200.00")
+    create_transaction(
+        client, transaction_type="income", category="food", amount="100.00"
+    )
+    create_transaction(
+        client, transaction_type="expense", category="food", amount="50.00"
+    )
+    create_transaction(
+        client, transaction_type="income", category="travel", amount="200.00"
+    )
 
     response = client.get(f"{TRANSACTIONS_URL}?transaction_type=income&category=food")
     data = response.json()
@@ -193,11 +203,19 @@ def test_get_transaction(client):
     }
 
 
-def test_get_transction_not_found(client):
+def test_get_transaction_raises_when_missing(db):
+    with pytest.raises(TransactionNotFoundError) as exc_info:
+        get_transaction(db=db, transaction_id=999)
+
+    assert "Transaction with id 999 not found" in str(exc_info.value)
+
+
+def test_get_transaction_not_found(client):
     response = client.get(transactions_url(999))
 
     assert response.status_code == 404
-    assert response.json() == {"detail": "Transaction not found"}
+    assert response.json()["error"]["code"] == "transaction_not_found"
+    assert "Transaction with id 999 not found" in response.json()["error"]["message"]
 
 
 def test_get_transaction_invalid_id(client):

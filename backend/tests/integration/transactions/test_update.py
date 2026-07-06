@@ -1,5 +1,10 @@
 """Update and patch transaction integration tests."""
 
+import pytest
+
+from app.core.exceptions.transactions import TransactionNotFoundError
+from app.services.transaction_services import (patch_transaction,
+                                               update_transaction)
 from tests.helpers import create_transaction, transactions_url
 
 
@@ -24,9 +29,25 @@ def test_update_transaction(client):
     assert get_response.json()["amount"] == "250.00"
 
 
+def test_udpate_raises_missing(db):
+    with pytest.raises(TransactionNotFoundError) as exc_info:
+        update_transaction(
+            db=db,
+            transaction_id=999,
+            data={
+                "description": "Food Purchase",
+                "amount": "100.00",
+                "category": "food",
+                "transaction_type": "expense",
+            },
+        )
+
+    assert "Transaction with id 999 not found" in str(exc_info.value)
+
+
 def test_update_transaction_not_found(client):
     response = client.put(
-        transactions_url(9999),
+        transactions_url(999),
         json={
             "description": "Food Purchase",
             "amount": "100.00",
@@ -35,7 +56,8 @@ def test_update_transaction_not_found(client):
         },
     )
     assert response.status_code == 404
-    assert response.json() == {"detail": "Transaction not found"}
+    assert response.json()["error"]["code"] == "transaction_not_found"
+    assert "Transaction with id 999 not found" in response.json()["error"]["message"]
 
 
 def test_update_transaction_invalid_id(client):
@@ -203,11 +225,18 @@ def test_patch_transaction_preserves_created_at(client):
     assert response.json()["created_at"] == original_created_at
 
 
+def test_patch_transaction_raises_missing(db):
+    with pytest.raises(TransactionNotFoundError) as exc_info:
+        patch_transaction(db=db, transaction_id=999, data={"amount": "200.00"})
+    assert "Transaction with id 999 not found" in str(exc_info.value)
+
+
 def test_patch_transaction_not_found(client):
-    response = client.patch(transactions_url(9999), json={"amount": "200.00"})
+    response = client.patch(transactions_url(999), json={"amount": "200.00"})
 
     assert response.status_code == 404
-    assert response.json() == {"detail": "Transaction not found"}
+    assert response.json()["error"]["code"] == "transaction_not_found"
+    assert "Transaction with id 999 not found" in response.json()["error"]["message"]
 
 
 def test_patch_transaction_invalid_id(client):

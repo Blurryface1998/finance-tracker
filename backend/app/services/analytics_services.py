@@ -6,6 +6,7 @@ from decimal import Decimal
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from app.core.exceptions import InvalidMonthError, InvalidYearError
 from app.models import Transaction
 from app.schemas import (CategorySummary, MonthlySummary, TransactionType,
                          YearlySummary)
@@ -38,7 +39,10 @@ def get_month_range(month: str) -> tuple:
     Returns:
         A tuple of (start_date, end_date) for the month.
     """
-    start = datetime.strptime(month, "%Y-%m").date()
+    try:
+        start = datetime.strptime(month, "%Y-%m").date()
+    except ValueError as exc:
+        raise InvalidMonthError(month=month) from exc
 
     if start.month == 12:
         end = date(start.year + 1, 1, 1)
@@ -81,7 +85,7 @@ def get_yearly_summary(db: Session, year: str) -> YearlySummary:
     order_year = int(year)
 
     if order_year <= 2000 or order_year >= 2100:
-        raise ValueError("Year must be between 2000 and 2100 ")
+        raise InvalidYearError(year=year)
 
     months = []
 

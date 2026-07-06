@@ -3,7 +3,7 @@
 from sqlalchemy import tuple_
 from sqlalchemy.orm import Session
 
-from app.core.exceptions.transactions import TransactionNotFoundError
+from app.core.exceptions import TransactionNotFoundError
 from app.models import Transaction
 from app.schemas import (PaginatedResponse, PaginationCursor,
                          TransactionCreate, TransactionFilter,
@@ -107,7 +107,7 @@ def get_transactions(
     )
 
 
-def get_transaction(db: Session, transaction_id: int) -> Transaction | None:
+def get_transaction(db: Session, transaction_id: int) -> Transaction:
     """Retrieve a single transaction by ID.
 
     Args:
@@ -115,9 +115,12 @@ def get_transaction(db: Session, transaction_id: int) -> Transaction | None:
         transaction_id: Primary key of the transaction.
 
     Returns:
-        The Transaction instance, or None if not found.
+        The Transaction instance.
+
+    Raises:
+        TransactionNotFoundError: If the transaction does not exist.
     """
-    return db.get(Transaction, transaction_id)
+    return _get_transaction(db, transaction_id)
 
 
 def update_transaction(

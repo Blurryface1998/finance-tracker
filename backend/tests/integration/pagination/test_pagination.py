@@ -34,6 +34,8 @@ def test_invalid_cursor(client):
     response = client.get(f"{TRANSACTIONS_URL}?limit=5&cursor=invalid")
 
     assert response.status_code == 422
+    assert response.json()["error"]["code"] == "invalid_cursor"
+    assert "Invalid cursor: invalid" in response.json()["error"]["message"]
 
 
 def test_limit(client):
