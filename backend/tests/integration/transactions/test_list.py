@@ -43,6 +43,7 @@ def test_get_transactions(client):
 
 
 def test_get_transactions_empty(client):
+    """Ensure the list endpoint returns an empty payload when no transactions exist."""
     response = client.get(TRANSACTIONS_URL)
     data = response.json()
 
@@ -53,6 +54,7 @@ def test_get_transactions_empty(client):
 
 
 def test_get_transactions_default_limit(client):
+    """Ensure the default page size is capped correctly."""
     for i in range(25):
         create_transaction(client, amount="10.00")
 
@@ -63,6 +65,7 @@ def test_get_transactions_default_limit(client):
 
 
 def test_get_transactions_limit_boundry(client):
+    """Ensure the requested limit is respected for list responses."""
     for i in range(10):
         create_transaction(client, amount="10.00")
     response = client.get(f"{TRANSACTIONS_URL}?limit=5")
@@ -72,12 +75,14 @@ def test_get_transactions_limit_boundry(client):
 
 
 def test_get_transactions_invalid_limit(client):
+    """Ensure limits above the maximum are rejected."""
     response = client.get(f"{TRANSACTIONS_URL}?limit=999")
 
     assert response.status_code == 422
 
 
 def test_get_transactions_filter_by_category(client):
+    """Ensure category filtering returns only matching transactions."""
     create_transaction(client, category="food")
     create_transaction(client, category="travel")
 
@@ -88,6 +93,7 @@ def test_get_transactions_filter_by_category(client):
 
 
 def test_get_transactions_filter_type(client):
+    """Ensure transaction type filtering works as expected."""
     create_transaction(client, transaction_type="income", amount="100.00")
     create_transaction(client, transaction_type="expense", amount="50.00")
 
@@ -98,6 +104,7 @@ def test_get_transactions_filter_type(client):
 
 
 def test_get_transactions_amount_range(client):
+    """Ensure amount range filtering returns matching transactions."""
     create_transaction(client, amount="10.00")
     create_transaction(client, amount="100.00")
     create_transaction(client, amount="200.00")
@@ -111,6 +118,7 @@ def test_get_transactions_amount_range(client):
 
 
 def test_get_transactions_combined_filters(client):
+    """Ensure multiple filters can be combined successfully."""
     create_transaction(
         client, transaction_type="income", category="food", amount="100.00"
     )
@@ -131,6 +139,7 @@ def test_get_transactions_combined_filters(client):
 
 
 def test_get_transactions_min_and_max_amount_together(client):
+    """Ensure min/max amount filters work together correctly."""
     create_transaction(client, amount="30.00")
     create_transaction(client, amount="70.00")
     create_transaction(client, amount="120.00")
@@ -144,6 +153,7 @@ def test_get_transactions_min_and_max_amount_together(client):
 
 
 def test_get_transactions_last_page_has_no_cursor(client):
+    """Ensure the last page does not include a next cursor."""
     for i in range(5):
         create_transaction(client, amount=str(i + 1))
 
@@ -155,6 +165,7 @@ def test_get_transactions_last_page_has_no_cursor(client):
 
 
 def test_get_transactions_same_created_at_maintains_id_order(client, db):
+    """Ensure transactions with the same timestamp stay ordered by ID."""
     same_time = datetime(2026, 7, 1, 12, 0, 0, tzinfo=UTC)
 
     create_transaction(client, db=db, amount="100.00", created_at=same_time)
@@ -170,6 +181,7 @@ def test_get_transactions_same_created_at_maintains_id_order(client, db):
 
 
 def test_get_trasactions_cursor_pagination(client):
+    """Ensure cursor-based pagination returns a second page of results."""
     for i in range(10):
         create_transaction(client, amount=str(i + 1))
     first = client.get(f"{TRANSACTIONS_URL}?limit=5").json()
@@ -204,6 +216,7 @@ def test_get_transaction(client):
 
 
 def test_get_transaction_raises_when_missing(db):
+    """Ensure the service raises a not-found error for a missing transaction."""
     with pytest.raises(TransactionNotFoundError) as exc_info:
         get_transaction(db=db, transaction_id=999)
 
@@ -211,6 +224,7 @@ def test_get_transaction_raises_when_missing(db):
 
 
 def test_get_transaction_not_found(client):
+    """Ensure a missing transaction returns the expected API error."""
     response = client.get(transactions_url(999))
 
     assert response.status_code == 404
@@ -219,12 +233,14 @@ def test_get_transaction_not_found(client):
 
 
 def test_get_transaction_invalid_id(client):
+    """Ensure invalid transaction IDs are rejected by validation."""
     response = client.get(transactions_url("abc"))
 
     assert response.status_code == 422
 
 
 def test_get_transaction_data_consistency(client):
+    """Ensure a fetched transaction matches the created payload."""
     created = create_transaction_json(client, amount="250.00")
     transaction_id = created["id"]
 

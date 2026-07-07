@@ -30,6 +30,7 @@ def test_update_transaction(client):
 
 
 def test_udpate_raises_missing(db):
+    """Ensure updating a missing transaction raises a not-found error."""
     with pytest.raises(TransactionNotFoundError) as exc_info:
         update_transaction(
             db=db,
@@ -46,6 +47,7 @@ def test_udpate_raises_missing(db):
 
 
 def test_update_transaction_not_found(client):
+    """Ensure updating a missing transaction returns the expected API error."""
     response = client.put(
         transactions_url(999),
         json={
@@ -61,6 +63,7 @@ def test_update_transaction_not_found(client):
 
 
 def test_update_transaction_invalid_id(client):
+    """Ensure invalid transaction IDs are rejected by the update endpoint."""
     response = client.put(
         transactions_url("abc"),
         json={
@@ -75,6 +78,7 @@ def test_update_transaction_invalid_id(client):
 
 
 def test_update_transaction_invalid_payload(client):
+    """Ensure invalid update payloads are rejected with validation errors."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -93,6 +97,7 @@ def test_update_transaction_invalid_payload(client):
 
 
 def test_update_transaction_normalization(client):
+    """Ensure update requests normalize text fields correctly."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -114,6 +119,7 @@ def test_update_transaction_normalization(client):
 
 
 def test_update_transaction_id_unchanged(client):
+    """Ensure the transaction ID remains unchanged after an update."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -134,6 +140,7 @@ def test_update_transaction_id_unchanged(client):
 
 
 def test_patch_transaction(client):
+    """Ensure patch updates a single field successfully."""
     create_response = create_transaction(client, amount="100.00")
     created = create_response.json()
     transaction_id = created["id"]
@@ -152,6 +159,7 @@ def test_patch_transaction(client):
 
 
 def test_patch_transaction_multiple_fields(client):
+    """Ensure patch requests can update multiple fields at once."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -174,6 +182,7 @@ def test_patch_transaction_multiple_fields(client):
 
 
 def test_patch_transaction_type_only(client):
+    """Ensure patch requests can update the transaction type alone."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -188,6 +197,7 @@ def test_patch_transaction_type_only(client):
 
 
 def test_patch_transaction_invalid_description_length(client):
+    """Ensure patch requests reject invalid description lengths."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -201,6 +211,7 @@ def test_patch_transaction_invalid_description_length(client):
 
 
 def test_patch_transaction_invalid_category_length(client):
+    """Ensure patch requests reject invalid category lengths."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -214,6 +225,7 @@ def test_patch_transaction_invalid_category_length(client):
 
 
 def test_patch_transaction_preserves_created_at(client):
+    """Ensure patch requests do not modify the original creation timestamp."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -226,12 +238,14 @@ def test_patch_transaction_preserves_created_at(client):
 
 
 def test_patch_transaction_raises_missing(db):
+    """Ensure patching a missing transaction raises a not-found error."""
     with pytest.raises(TransactionNotFoundError) as exc_info:
         patch_transaction(db=db, transaction_id=999, data={"amount": "200.00"})
     assert "Transaction with id 999 not found" in str(exc_info.value)
 
 
 def test_patch_transaction_not_found(client):
+    """Ensure patching a missing transaction returns the expected API error."""
     response = client.patch(transactions_url(999), json={"amount": "200.00"})
 
     assert response.status_code == 404
@@ -240,12 +254,14 @@ def test_patch_transaction_not_found(client):
 
 
 def test_patch_transaction_invalid_id(client):
+    """Ensure invalid transaction IDs are rejected by the patch endpoint."""
     response = client.patch(transactions_url("abc"), json={"amount": "200.00"})
 
     assert response.status_code == 422
 
 
 def test_patch_transaction_invalid_amount(client):
+    """Ensure patch requests reject negative amounts."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -256,6 +272,7 @@ def test_patch_transaction_invalid_amount(client):
 
 
 def test_patch_transaction_zero_amount(client):
+    """Ensure patch requests reject zero amounts."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -266,6 +283,7 @@ def test_patch_transaction_zero_amount(client):
 
 
 def test_patch_transaction_normalizes_text(client):
+    """Ensure patch requests normalize text fields correctly."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -284,6 +302,7 @@ def test_patch_transaction_normalizes_text(client):
 
 
 def test_patch_transaction_empty_payload(client):
+    """Ensure an empty patch payload is accepted without changing the transaction."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]
@@ -294,6 +313,7 @@ def test_patch_transaction_empty_payload(client):
 
 
 def test_patch_transaction_preserves_unmodified_fields(client):
+    """Ensure patch requests leave other fields unchanged."""
     create_response = create_transaction(client)
     created = create_response.json()
     transaction_id = created["id"]

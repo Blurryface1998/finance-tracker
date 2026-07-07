@@ -1,3 +1,4 @@
+from .database import DatabaseError
 from .transactions import TransactionNotFoundError
 from .validation import (InvalidCurrencyError, InvalidCursorError,
                          InvalidMonthError, InvalidTransactionAmountError,
@@ -10,4 +11,5 @@ __all__ = [
     "InvalidTransactionAmountError",
     "InvalidCurrencyError",
     "InvalidMonthError",
+    "DatabaseError",
 ]

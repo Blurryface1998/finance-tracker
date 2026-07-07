@@ -1,27 +1,26 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+"""Database configuration and session helpers for the backend."""
 
-# SqLite database file
+from collections.abc import Generator
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+
 DATABASE_URL = "sqlite:///./finance.db"
 
-
-# Engine = connection to DB
 engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}  # needed for SqLite
+    DATABASE_URL,
+    connect_args={"check_same_thread": False},
 )
 
-# Session factory used to create database sessions
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 class Base(DeclarativeBase):
-    """Base class for SQLAlchemy ORM models."""
-
-    pass
+    """Base class for all SQLAlchemy ORM models."""
 
 
-def get_db():
-    """Yield a database session and ensure the session is closed after use."""
+def get_db() -> Generator[Session, None, None]:
+    """Yield a database session and ensure it is closed after the request completes."""
     db = SessionLocal()
     try:
         yield db

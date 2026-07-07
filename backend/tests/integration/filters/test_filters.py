@@ -15,6 +15,7 @@ def test_filter_by_category(client):
 
 
 def test_filter_by_transaction_type(client):
+    """Ensure filtering by transaction type returns only matching items."""
     create_transaction(client, transaction_type="income", amount="100.00")
     create_transaction(client, transaction_type="expense", amount="50.00")
 
@@ -26,6 +27,7 @@ def test_filter_by_transaction_type(client):
 
 
 def test_filter_by_min_amount(client):
+    """Ensure min amount filtering returns only larger transactions."""
     create_transaction(client, amount="10.00")
     create_transaction(client, amount="100.00")
 
@@ -37,6 +39,7 @@ def test_filter_by_min_amount(client):
 
 
 def test_filter_by_max_amount(client):
+    """Ensure max amount filtering returns only smaller transactions."""
     create_transaction(client, amount="10.00")
     create_transaction(client, amount="100.00")
 
@@ -48,18 +51,21 @@ def test_filter_by_max_amount(client):
 
 
 def test_filter_invalid_min_amount(client):
+    """Ensure non-numeric min amount values are rejected."""
     response = client.get(f"{TRANSACTIONS_URL}?min_amount=abc")
 
     assert response.status_code == 422
 
 
 def test_filter_invalid_transaction_type(client):
+    """Ensure invalid transaction types are rejected by the filter endpoint."""
     response = client.get(f"{TRANSACTIONS_URL}?transaction_type=bad")
 
     assert response.status_code == 422
 
 
 def test_filter_by_category_case_insensitive(client):
+    """Ensure category filters are case-insensitive."""
     create_transaction(client, category="Food")
     create_transaction(client, category="Travel")
 

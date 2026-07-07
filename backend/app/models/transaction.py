@@ -1,3 +1,5 @@
+"""SQLAlchemy model definitions for financial transactions."""
+
 from datetime import UTC, datetime
 from decimal import Decimal
 

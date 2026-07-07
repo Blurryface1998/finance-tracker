@@ -3,7 +3,8 @@
 from sqlalchemy import tuple_
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import TransactionNotFoundError
+from app.core.exceptions import DatabaseError, TransactionNotFoundError
+from app.core.logging import logger
 from app.models import Transaction
 from app.schemas import (PaginatedResponse, PaginationCursor,
                          TransactionCreate, TransactionFilter,
@@ -12,9 +13,8 @@ from app.schemas import (PaginatedResponse, PaginationCursor,
 from app.utils.cursor import encode_cursor
 
 
-# Helper function
-def _get_transaction(db: Session, transaction_id: int) -> Transaction | None:
-    """Return a transaction by ID, or None if it does not exist."""
+def _get_transaction(db: Session, transaction_id: int) -> Transaction:
+    """Return a transaction by ID or raise a not-found exception."""
     transaction = db.get(Transaction, transaction_id)
 
     if not transaction:
@@ -32,16 +32,28 @@ def create_transaction(db: Session, data: TransactionCreate) -> Transaction:
     Returns:
         The saved Transaction instance.
     """
+    logger.info(
+        "Creating transaction: category=%s amount=%s type=%s",
+        data.category,
+        data.amount,
+        data.transaction_type,
+    )
     transaction = Transaction(
         description=data.description,
         amount=data.amount,
         category=data.category,
         transaction_type=data.transaction_type,
     )
-    db.add(transaction)
-    db.commit()
-    db.refresh(transaction)
 
+    try:
+        db.add(transaction)
+        db.commit()
+        db.refresh(transaction)
+    except Exception:
+        logger.exception("Failed to create transaction")
+        raise DatabaseError("Database Error")
+
+    logger.info("Transaction created successfully: id=%s", transaction.id)
     return transaction
 
 
@@ -62,6 +74,13 @@ def get_transactions(
     Returns:
         A paginated response containing the transactions and pagination metadata.
     """
+
+    logger.info(
+        "Fetching transactions: limit=%s cursor=%s filters=%s",
+        limit,
+        cursor is not None,
+        filters,
+    )
 
     query = db.query(Transaction).order_by(
         Transaction.created_at.desc(), Transaction.id.desc()
@@ -100,6 +119,12 @@ def get_transactions(
         else None
     )
 
+    logger.info(
+        "Returned %s transactions with has_next=%s",
+        len(items),
+        has_next,
+    )
+
     return PaginatedResponse(
         items=items,
         next_cursor=encode_cursor(next_cursor) if next_cursor else None,
@@ -120,6 +145,7 @@ def get_transaction(db: Session, transaction_id: int) -> Transaction:
     Raises:
         TransactionNotFoundError: If the transaction does not exist.
     """
+    logger.info("Fetching transaction: id=%s", transaction_id)
     return _get_transaction(db, transaction_id)
 
 
@@ -136,6 +162,7 @@ def update_transaction(
     Returns:
         The updated Transaction instance, or None if not found.
     """
+    logger.info("Updating transaction: id=%s", transaction_id)
     transaction = _get_transaction(db, transaction_id)
 
     transaction.description = data.description
@@ -149,20 +176,19 @@ def update_transaction(
     return transaction
 
 
-def delete_transaction(db: Session, transaction_id: int) -> Transaction | None:
-    """Delete a transaction by ID.
+def delete_transaction(db: Session, transaction_id: int) -> None:
+    """Delete a transaction by ID and persist the change.
 
     Args:
         db: SQLAlchemy session instance.
         transaction_id: Primary key of the transaction.
-
-    Returns:
-        The deleted Transaction instance, or None if not found.
     """
+    logger.info("Deleting transaction: id=%s", transaction_id)
     transaction = _get_transaction(db, transaction_id)
 
     db.delete(transaction)
     db.commit()
+    logger.info("Transaction deleted successfully: id=%s", transaction_id)
 
 
 def patch_transaction(
@@ -178,6 +204,7 @@ def patch_transaction(
     Returns:
         The updated Transaction instance, or None if not found.
     """
+    logger.info("Patching transaction: id=%s", transaction_id)
     transaction = _get_transaction(db, transaction_id)
 
     if data.description is not None:

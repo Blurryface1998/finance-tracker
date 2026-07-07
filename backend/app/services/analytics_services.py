@@ -18,7 +18,7 @@ def get_transaction_total(
     start_date: date,
     end_date: date,
 ) -> Decimal:
-    """Return the total amount for a transaction type within a date range."""
+    """Return the total amount for one transaction type within a date range."""
     return (
         db.query(func.coalesce(func.sum(Transaction.amount), 0))
         .filter(
@@ -30,14 +30,14 @@ def get_transaction_total(
     )
 
 
-def get_month_range(month: str) -> tuple:
-    """Convert a month string into a date range.
+def get_month_range(month: str) -> tuple[date, date]:
+    """Convert a month string into a start/end date range.
 
     Args:
         month: Month string in format 'YYYY-MM'.
 
     Returns:
-        A tuple of (start_date, end_date) for the month.
+        A tuple containing the first and last day of the requested month.
     """
     try:
         start = datetime.strptime(month, "%Y-%m").date()
@@ -60,7 +60,7 @@ def get_monthly_summary(db: Session, month: str) -> MonthlySummary:
         month: Month string in format 'YYYY-mm'.
 
     Returns:
-        A dictionary with month, income, expense, and balance.
+        A MonthlySummary containing income, expense, and balance values.
     """
     start_date, end_date = get_month_range(month)
     income = get_transaction_total(db, TransactionType.income, start_date, end_date)
