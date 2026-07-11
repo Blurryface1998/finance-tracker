@@ -1,11 +1,10 @@
-"""Transaction schema definitions for requests, responses, and pagination."""
-
 from datetime import datetime
 from decimal import Decimal
-from enum import Enum
 from typing import Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
+
+from app.core import TransactionType
 
 ResponseItem = TypeVar("ResponseItem")
 
@@ -16,7 +15,6 @@ def normalize_text(value: str) -> str:
 
     if len(value) < 1 or len(value) > 50:
         raise ValueError("Must be between 1 and 50")
-
     return value.title()
 
 
@@ -25,17 +23,6 @@ def validate_amount(value: Decimal) -> Decimal:
     if value <= 0:
         raise ValueError("Amount must be more than 0")
     return value
-
-
-class TransactionType(str, Enum):
-    """Supported transaction categories used by the API."""
-
-    income = "income"
-    expense = "expense"
-
-
-class ErrorResponse(BaseModel):
-    error: dict
 
 
 class TransactionBase(BaseModel):
@@ -100,7 +87,7 @@ class TransactionPatch(BaseModel):
 class TransactionFilter(BaseModel):
     """Schema for filters for transactions."""
 
-    transaction_type: TransactionType | None = None
+    transaction_type: TransactionType | None = NotImplemented
     category: str | None = None
     min_amount: Decimal | None = None
     max_amount: Decimal | None = None
@@ -116,31 +103,8 @@ class TransactionFilter(BaseModel):
         return self
 
 
-class CategorySummary(BaseModel):
-    """Schema for reporting category totals."""
-
-    category: str
-    total: Decimal
-
-
-class MonthlySummary(BaseModel):
-    """Schema for monthly income, expense, and balance summary data."""
-
-    month: int
-    income: Decimal
-    expense: Decimal
-    balance: Decimal
-
-
-class YearlySummary(BaseModel):
-    """Schema for a yearly summary containing monthly totals."""
-
-    year: int
-    months: list[MonthlySummary]
-
-
 class PaginationCursor(BaseModel):
-    """Cursor payload used for cursor-based pagination."""
+    "Cursor payload used for cursor-based pagination."
 
     created_at: datetime
     cursor_id: int
@@ -154,7 +118,7 @@ class PaginationCursor(BaseModel):
 
 
 class PaginationResult(BaseModel, Generic[ResponseItem]):
-    """Container for paginated query results before they are serialized."""
+    """Container for paginated query results before the are serialized."""
 
     items: list[ResponseItem]
     next_cursor: PaginationCursor | None

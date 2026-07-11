@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 
+from app.analytics.routes import router as analytics_router
 from app.core.database import Base, engine
 from app.core.exceptions.base import AppException
 from app.core.exceptions.exception_handlers import app_exception_handler
@@ -13,5 +14,6 @@ logger.info("Initializing Finance Tracker API")
 Base.metadata.create_all(bind=engine)
 logger.info("Database models initialized")
 app.include_router(router)
+app.include_router(analytics_router)
 app.add_exception_handler(AppException, app_exception_handler)
 logger.info("API routes and exception handlers registered")

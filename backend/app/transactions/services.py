@@ -1,15 +1,10 @@
-"""Transaction service operations for CRUD, filtering, and pagination."""
-
 from sqlalchemy import tuple_
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import DatabaseError, TransactionNotFoundError
 from app.core.logging import logger
 from app.models import Transaction
-from app.schemas import (PaginatedResponse, PaginationCursor,
-                         TransactionCreate, TransactionFilter,
-                         TransactionPatch, TransactionResponse,
-                         TransactionUpdate)
+from app.transactions import schemas
 from app.utils.cursor import encode_cursor
 
 
@@ -22,7 +17,7 @@ def _get_transaction(db: Session, transaction_id: int) -> Transaction:
     return transaction
 
 
-def create_transaction(db: Session, data: TransactionCreate) -> Transaction:
+def create_transaction(db: Session, data: schemas.TransactionCreate) -> Transaction:
     """Create and save a new transaction.
 
     Args:
@@ -41,7 +36,7 @@ def create_transaction(db: Session, data: TransactionCreate) -> Transaction:
     transaction = Transaction(
         description=data.description,
         amount=data.amount,
-        category=data.category,
+        categor=data.category,
         transaction_type=data.transaction_type,
     )
 
@@ -60,9 +55,9 @@ def create_transaction(db: Session, data: TransactionCreate) -> Transaction:
 def get_transactions(
     db: Session,
     limit: int = 20,
-    cursor: PaginationCursor | None = None,
-    filters: TransactionFilter | None = None,
-) -> PaginatedResponse[TransactionResponse]:
+    cursor: schemas.PaginationCursor | None = None,
+    filters: schemas.TransactionFilter | None = None,
+) -> schemas.PaginatedResponse[schemas.TransactionResponse]:
     """Retrieve transactions with optional filters and cursor-based pagination.
 
     Args:
@@ -74,7 +69,6 @@ def get_transactions(
     Returns:
         A paginated response containing the transactions and pagination metadata.
     """
-
     logger.info(
         "Fetching transactions: limit=%s cursor=%s filters=%s",
         limit,
@@ -86,22 +80,19 @@ def get_transactions(
         Transaction.created_at.desc(), Transaction.id.desc()
     )
 
-    filters = filters or TransactionFilter()
+    filters = filters or schemas.TransactionFilter()
 
     if filters.transaction_type:
         query = query.filter(Transaction.transaction_type == filters.transaction_type)
 
-    if filters.category:
+    if filters.category is not None:
         query = query.filter(Transaction.category.ilike(f"%{filters.category}%"))
-
-    if filters.min_amount is not None:
+    if filters.min_amount:
         query = query.filter(Transaction.amount >= filters.min_amount)
-
     if filters.max_amount is not None:
         query = query.filter(Transaction.amount <= filters.max_amount)
 
     if cursor:
-        # Use SQLAlchemy's tuple_ construct for composite column comparison
         query = query.filter(
             tuple_(Transaction.created_at, Transaction.id)
             < (cursor.created_at, cursor.cursor_id)
@@ -114,7 +105,7 @@ def get_transactions(
     last = items[-1] if items else None
 
     next_cursor = (
-        PaginationCursor(created_at=last.created_at, cursor_id=last.id)
+        schemas.PaginationCursor(created_at=last.created_at, cursor_id=last.id)
         if has_next and last
         else None
     )
@@ -125,7 +116,7 @@ def get_transactions(
         has_next,
     )
 
-    return PaginatedResponse(
+    return schemas.PaginatedResponse(
         items=items,
         next_cursor=encode_cursor(next_cursor) if next_cursor else None,
         has_next=has_next,
@@ -150,7 +141,7 @@ def get_transaction(db: Session, transaction_id: int) -> Transaction:
 
 
 def update_transaction(
-    db: Session, transaction_id: int, data: TransactionUpdate
+    db: Session, transaction_id: int, data: schemas.TransactionUpdate
 ) -> Transaction | None:
     """Update an existing transaction.
 
@@ -192,7 +183,7 @@ def delete_transaction(db: Session, transaction_id: int) -> None:
 
 
 def patch_transaction(
-    db: Session, transaction_id: int, data: TransactionPatch
+    db: Session, transaction_id: int, data: schemas.TransactionPatch
 ) -> Transaction | None:
     """Apply partial updates to an existing transaction.
 

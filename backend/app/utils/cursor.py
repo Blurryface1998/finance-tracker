@@ -12,7 +12,7 @@ def encode_cursor(cursor: PaginationCursor) -> str:
     """Encode a pagination cursor to a URL-safe string."""
     payload = {
         "created_at": cursor.created_at.isoformat(),
-        "id": cursor.id,
+        "id": cursor.cursor_id,
     }
 
     raw = json.dumps(payload).encode("utf-8")
@@ -36,5 +36,5 @@ def decode_cursor(cursor_str: str) -> PaginationCursor:
 
     return PaginationCursor(
         created_at=datetime.fromisoformat(data["created_at"]),
-        id=data["id"],
+        cursor_id=data["id"],
     )
