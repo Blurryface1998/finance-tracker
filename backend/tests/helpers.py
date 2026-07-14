@@ -1,10 +1,9 @@
 """Test helpers for generating transaction payloads and requests."""
 
-
 from app.models import Transaction
 
 TRANSACTIONS_URL = "/transactions"
-SUMMARY_URL = "/transactions/summary"
+SUMMARY_URL = "/analytics"
 
 
 def transaction_payload(**overrides):
@@ -59,7 +58,7 @@ def income_payload(**overides):
     return transaction_payload(transaction_type="income", category="income", **overides)
 
 
-def expense_transaction(**overides):
+def expense_payload(**overides):
     """Build a payload for an expense transaction."""
     return transaction_payload(
         transaction_type="expense", category="expense", **overides

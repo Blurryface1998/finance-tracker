@@ -5,7 +5,7 @@ import binascii
 import json
 from datetime import datetime
 
-from app.schemas import PaginationCursor
+from app.transactions.schemas import PaginationCursor
 
 
 def encode_cursor(cursor: PaginationCursor) -> str:

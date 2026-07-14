@@ -10,7 +10,7 @@ def test_monthly_summary_income_only(client):
     create_transaction(client, amount="100")
     create_transaction(client, amount="200")
 
-    response = client.get(f"{SUMMARY_URL}?month=2026-07")
+    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
 
@@ -26,7 +26,7 @@ def test_monthly_expense_only(client):
     create_transaction(client, amount="150.00", transaction_type="expense")
     create_transaction(client, amount="50.00", transaction_type="expense")
 
-    response = client.get(f"{SUMMARY_URL}?month=2026-07")
+    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
 
@@ -42,7 +42,7 @@ def test_monthly_summary_income_and_expenses(client):
     create_transaction(client, amount=2000, transaction_type="income")
     create_transaction(client, amount=500, transaction_type="expense")
 
-    response = client.get(f"{SUMMARY_URL}?month=2026-07")
+    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
 
@@ -55,7 +55,7 @@ def test_monthly_summary_income_and_expenses(client):
 
 def test_monthly_summary_empty(client):
     """Ensure empty months return zeroed summary values."""
-    response = client.get(f"{SUMMARY_URL}?month=2026-07")
+    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
     data = response.json()
 
     assert response.status_code == 200
@@ -74,7 +74,7 @@ def test_summary_ignores_other_months(client, db):
         client, db=db, amount="500", created_at=datetime(2026, 6, 15, tzinfo=UTC)
     )
 
-    response = client.get(f"{SUMMARY_URL}?month=2026-07")
+    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     data = response.json()
 
@@ -95,7 +95,7 @@ def test_summary_decimal_precision(client):
 
 def test_invalid_month_format(client):
     """Ensure malformed month values are rejected by validation."""
-    response = client.get(f"{SUMMARY_URL}?month=2026/07")
+    response = client.get(f"{SUMMARY_URL}/monthly?month=2026/07")
 
     assert response.status_code == 422
 
@@ -128,7 +128,7 @@ def test_monthly_summary_end_of_month_excluded(client, db):
         created_at=datetime(2026, 8, 1, 0, 0, 0, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}?month=2026-07")
+    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
     assert response.json()["income"] == "0.00"
@@ -176,7 +176,7 @@ def test_monthly_summary_last_second_of_month_included(client, db):
         created_at=datetime(2026, 7, 31, 23, 59, 59, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}?month=2026-07")
+    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
     assert response.json()["income"] == "1000.00"

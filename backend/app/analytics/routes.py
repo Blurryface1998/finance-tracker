@@ -3,17 +3,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
-
-"""from app.analytics import (
-    MonthlySummary,
-    YearlySummary,
-    CategorySummary,
-    get_monthly_summary,
-    get_yearly_summary,
-    get_category_summary,
-)"""
 from app.analytics import schemas, services
+from app.core.database import get_db
 
 router = APIRouter(prefix="/analytics", tags=["Analytics"])
 
@@ -40,3 +31,21 @@ async def get_category_summary_route(
 ) -> list[schemas.CategorySummary]:
     "Retrun a summary of totals grouped by category."
     return services.get_category_summary(db=db)
+
+
+@router.get("")
+async def legacy_summary_route(
+    month: Annotated[str | None, Query(pattern=r"\d{4}-\d{2}")] = None,
+    year: Annotated[str | None, Query(pattern=r"\d{4}")] = None,
+    db: Session = Depends(get_db),
+) -> object:
+    """Backward-compatible endpoint: /analytics?month=YYYY-MM or /analytics?year=YYYY
+
+    Prefer the explicit `/monthly` and `/yearly` routes, but keep this for tests
+    and older clients.
+    """
+    if month is not None:
+        return services.get_monthly_summary(db=db, month=month)
+    if year is not None:
+        return services.get_yearly_summary(db=db, year=year)
+    return []

@@ -3,7 +3,7 @@
 import pytest
 
 from app.core.exceptions.transactions import TransactionNotFoundError
-from app.services.transaction_services import delete_transaction
+from app.transactions.services import delete_transaction
 from tests.helpers import (create_transaction, create_transaction_json,
                            transactions_url)
 

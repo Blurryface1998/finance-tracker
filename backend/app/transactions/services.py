@@ -1,11 +1,12 @@
 from sqlalchemy import tuple_
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import DatabaseError, TransactionNotFoundError
+from app.core.exceptions import (DatabaseError, InvalidCursorError,
+                                 TransactionNotFoundError)
 from app.core.logging import logger
 from app.models import Transaction
 from app.transactions import schemas
-from app.utils.cursor import encode_cursor
+from app.utils.cursor import decode_cursor, encode_cursor
 
 
 def _get_transaction(db: Session, transaction_id: int) -> Transaction:
@@ -36,7 +37,7 @@ def create_transaction(db: Session, data: schemas.TransactionCreate) -> Transact
     transaction = Transaction(
         description=data.description,
         amount=data.amount,
-        categor=data.category,
+        category=data.category,
         transaction_type=data.transaction_type,
     )
 
@@ -44,9 +45,9 @@ def create_transaction(db: Session, data: schemas.TransactionCreate) -> Transact
         db.add(transaction)
         db.commit()
         db.refresh(transaction)
-    except Exception:
+    except Exception as exc:
         logger.exception("Failed to create transaction")
-        raise DatabaseError("Database Error")
+        raise DatabaseError() from exc
 
     logger.info("Transaction created successfully: id=%s", transaction.id)
     return transaction
@@ -69,6 +70,13 @@ def get_transactions(
     Returns:
         A paginated response containing the transactions and pagination metadata.
     """
+    # Decode cursor only when provided
+    if cursor is not None:
+        try:
+            cursor = decode_cursor(cursor)
+        except ValueError as exc:
+            raise InvalidCursorError(cursor) from exc
+
     logger.info(
         "Fetching transactions: limit=%s cursor=%s filters=%s",
         limit,

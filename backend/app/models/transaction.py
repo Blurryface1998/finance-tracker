@@ -8,7 +8,7 @@ from sqlalchemy import DateTime, Enum, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.schemas import TransactionType
+from app.core.enums import TransactionType
 
 if TYPE_CHECKING:
     from app.models import User
@@ -32,7 +32,7 @@ class Transaction(Base):
     transaction_type: Mapped[TransactionType] = mapped_column(
         Enum(TransactionType), index=True
     )
-    user_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("users.id"), nullable=False
+    user_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("users.id"), nullable=True
     )
     user: Mapped["User"] = relationship(back_populates="transactions")

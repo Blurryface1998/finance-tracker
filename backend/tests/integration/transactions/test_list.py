@@ -6,7 +6,7 @@ from decimal import Decimal
 import pytest
 
 from app.core.exceptions.transactions import TransactionNotFoundError
-from app.services.transaction_services import get_transaction
+from app.transactions.services import get_transaction
 from tests.helpers import (TRANSACTIONS_URL, create_transaction,
                            create_transaction_json, transactions_url)
 
