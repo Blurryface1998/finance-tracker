@@ -1,5 +1,12 @@
+from datetime import datetime, timedelta, timezone
+from typing import Any
+
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
+from jose import jwt
+from jose.exceptions import JWTError
+from app.core.config import settings
+from app.core.exceptions import InvalidCredentialsError
 
 password_hasher = PasswordHasher()
 
@@ -13,3 +20,33 @@ def verify_password(password: str, password_hash: str) -> bool:
         return password_hasher.verify(password_hash, password)
     except VerifyMismatchError:
         return False
+
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
+    to_encode = data.copy()
+
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=settings.access_token_expire_minutes
+        )
+
+    to_encode["exp"] = expire
+
+    return jwt.encode(
+        to_encode,
+        settings.secret_key,
+        algorithm=settings.algorithm,
+    )
+
+
+def decode_access_token(token: str) -> dict[str, Any]:
+
+    try:
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=[settings.algorithm]
+        )
+        return payload
+    except JWTError as exc:
+        raise InvalidCredentialsError() from exc

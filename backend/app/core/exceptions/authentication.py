@@ -1,10 +1,10 @@
-from app.core.exceptions.base import AppException
+from .base import AppException
 
 
-class UserAlreadyExistsError(AppException):
+class InvalidCredentialsError(AppException):
     def __init__(self) -> None:
         super().__init__(
-            message="Email already registered",
-            status_code=403,
-            error_code="email_registered",
+            message="Invalid credentials",
+            status_code=401,
+            error_code="invalid_credentials",
         )
