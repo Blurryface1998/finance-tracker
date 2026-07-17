@@ -41,12 +41,14 @@ def user_login_payload(**overrides):
     return base
 
 
-def create_transaction(client, db=None, created_at=None, **overrides):
+def create_transaction(client, headers=None, db=None, created_at=None, **overrides):
     """Send a create transaction request through the test client."""
     payload_overrides = {k: v for k, v in overrides.items() if k != "created_at"}
 
     response = client.post(
-        TRANSACTIONS_URL, json=transaction_payload(**payload_overrides)
+        TRANSACTIONS_URL,
+        json=transaction_payload(**payload_overrides),
+        headers=headers,
     )
 
     if created_at is not None and db is None:

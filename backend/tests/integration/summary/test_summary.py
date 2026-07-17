@@ -5,12 +5,12 @@ from datetime import UTC, datetime
 from tests.helpers import SUMMARY_URL, create_transaction
 
 
-def test_monthly_summary_income_only(client):
+def test_monthly_summary_income_only(authenticated_client):
     """Verify monthly summary returns total income for the requested month."""
-    create_transaction(client, amount="100")
-    create_transaction(client, amount="200")
+    create_transaction(authenticated_client, amount="100")
+    create_transaction(authenticated_client, amount="200")
 
-    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
+    response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
 
@@ -21,12 +21,14 @@ def test_monthly_summary_income_only(client):
     assert data["balance"] == "300.00"
 
 
-def test_monthly_expense_only(client):
+def test_monthly_expense_only(authenticated_client):
     """Ensure monthly summaries return expense totals correctly."""
-    create_transaction(client, amount="150.00", transaction_type="expense")
-    create_transaction(client, amount="50.00", transaction_type="expense")
+    create_transaction(
+        authenticated_client, amount="150.00", transaction_type="expense"
+    )
+    create_transaction(authenticated_client, amount="50.00", transaction_type="expense")
 
-    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
+    response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
 
@@ -37,12 +39,12 @@ def test_monthly_expense_only(client):
     assert data["balance"] == "-200.00"
 
 
-def test_monthly_summary_income_and_expenses(client):
+def test_monthly_summary_income_and_expenses(authenticated_client):
     """Ensure monthly summaries include both income and expenses."""
-    create_transaction(client, amount=2000, transaction_type="income")
-    create_transaction(client, amount=500, transaction_type="expense")
+    create_transaction(authenticated_client, amount=2000, transaction_type="income")
+    create_transaction(authenticated_client, amount=500, transaction_type="expense")
 
-    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
+    response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
 
@@ -53,9 +55,9 @@ def test_monthly_summary_income_and_expenses(client):
     assert data["balance"] == "1500.00"
 
 
-def test_monthly_summary_empty(client):
+def test_monthly_summary_empty(authenticated_client):
     """Ensure empty months return zeroed summary values."""
-    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
+    response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
     data = response.json()
 
     assert response.status_code == 200
@@ -66,84 +68,87 @@ def test_monthly_summary_empty(client):
     assert data["month"] == 7
 
 
-def test_summary_ignores_other_months(client, db):
+def test_summary_ignores_other_months(authenticated_client, db):
     """Ensure summaries ignore transactions from other months."""
-    create_transaction(client, amount="1000")
+    create_transaction(authenticated_client, amount="1000")
 
     create_transaction(
-        client, db=db, amount="500", created_at=datetime(2026, 6, 15, tzinfo=UTC)
+        authenticated_client,
+        db=db,
+        amount="500",
+        created_at=datetime(2026, 6, 15, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
+    response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     data = response.json()
 
     assert data["income"] == "1000.00"
 
 
-def test_summary_decimal_precision(client):
+def test_summary_decimal_precision(authenticated_client):
     """Ensure summary values preserve decimal precision."""
-    create_transaction(client, amount="10.25")
-    create_transaction(client, amount="20.75")
+    create_transaction(authenticated_client, amount="10.25")
+    create_transaction(authenticated_client, amount="20.75")
 
-    response = client.get(f"{SUMMARY_URL}?month=2026-07")
+    response = authenticated_client.get(f"{SUMMARY_URL}?month=2026-07")
 
     data = response.json()
 
     assert data["income"] == "31.00"
 
 
-def test_invalid_month_format(client):
+def test_invalid_month_format(authenticated_client):
     """Ensure malformed month values are rejected by validation."""
-    response = client.get(f"{SUMMARY_URL}/monthly?month=2026/07")
+    response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026/07")
 
     assert response.status_code == 422
 
-    response = client.get(f"{SUMMARY_URL}?month=abc")
+    response = authenticated_client.get(f"{SUMMARY_URL}?month=abc")
 
     assert response.status_code == 422
 
-    response = client.get(f"{SUMMARY_URL}?month=2026-07")
+    response = authenticated_client.get(f"{SUMMARY_URL}?month=2026-07")
 
     assert response.status_code == 200
 
 
-def test_monthly_summary_invalid_month_value(client):
+def test_monthly_summary_invalid_month_value(authenticated_client):
     """Ensure out-of-range months are rejected."""
-    response = client.get(f"{SUMMARY_URL}?month=2026-13")
+    response = authenticated_client.get(f"{SUMMARY_URL}?month=2026-13")
 
     assert response.status_code == 422
 
-    response = client.get(f"{SUMMARY_URL}?month=2026-00")
+    response = authenticated_client.get(f"{SUMMARY_URL}?month=2026-00")
 
     assert response.status_code == 422
 
 
-def test_monthly_summary_end_of_month_excluded(client, db):
+def test_monthly_summary_end_of_month_excluded(authenticated_client, db):
     """Ensure transactions on the first day of the next month are excluded."""
     create_transaction(
-        client,
+        authenticated_client,
         db=db,
         amount="1000",
         created_at=datetime(2026, 8, 1, 0, 0, 0, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
+    response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
     assert response.json()["income"] == "0.00"
 
 
-def test_yearly_summary_months_returned_in_ascending_order(client, db):
+def test_yearly_summary_months_returned_in_ascending_order(authenticated_client, db):
     """Ensure yearly summaries list months in ascending order."""
     create_transaction(
-        client,
+        authenticated_client,
         db=db,
         amount="100.00",
         created_at=datetime(2026, 3, 5, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}/yearly?year=2026")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=2026")
     data = response.json()
 
     months = [month_data["month"] for month_data in data["months"]]
@@ -156,42 +161,42 @@ def test_yearly_summary_months_returned_in_ascending_order(client, db):
     assert march["income"] == "100.00"
 
 
-def test_yearly_summary_year_out_of_range(client):
+def test_yearly_summary_year_out_of_range(authenticated_client):
     """Ensure years outside the supported range are rejected."""
-    response = client.get(f"{SUMMARY_URL}/yearly?year=1999")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=1999")
 
     assert response.status_code == 422
 
-    response = client.get(f"{SUMMARY_URL}/yearly?year=2100")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=2100")
 
     assert response.status_code == 422
 
 
-def test_monthly_summary_last_second_of_month_included(client, db):
+def test_monthly_summary_last_second_of_month_included(authenticated_client, db):
     """Ensure the last second of a month is included in the summary."""
     create_transaction(
-        client,
+        authenticated_client,
         db=db,
         amount="1000",
         created_at=datetime(2026, 7, 31, 23, 59, 59, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
+    response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     assert response.status_code == 200
     assert response.json()["income"] == "1000.00"
 
 
-def test_yearly_summary_december_edge(client, db):
+def test_yearly_summary_december_edge(authenticated_client, db):
     """Ensure December is handled correctly in yearly summaries."""
     create_transaction(
-        client,
+        authenticated_client,
         db=db,
         amount="1000",
         created_at=datetime(2026, 12, 31, 23, 59, 59, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}/yearly?year=2026")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=2026")
     data = response.json()
 
     december = next(
@@ -201,9 +206,9 @@ def test_yearly_summary_december_edge(client, db):
     assert december["income"] == "1000.00"
 
 
-def test_yearly_summary(client):
+def test_yearly_summary(authenticated_client):
     """Verify yearly summary includes the expected income for the current month."""
-    response = client.get(f"{SUMMARY_URL}/yearly?year=2026")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=2026")
     data = response.json()
 
     assert response.status_code == 200
@@ -217,13 +222,16 @@ def test_yearly_summary(client):
         assert month["balance"] == "0.00"
 
 
-def test_yearly_summary_single_transaction(client, db):
+def test_yearly_summary_single_transaction(authenticated_client, db):
     """Ensure one transaction contributes to the correct monthly summary."""
     create_transaction(
-        client, amount="1000", db=db, created_at=datetime(2026, 7, 10, tzinfo=UTC)
+        authenticated_client,
+        amount="1000",
+        db=db,
+        created_at=datetime(2026, 7, 10, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}/yearly?year=2026")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=2026")
     data = response.json()
 
     july = next(month_data for month_data in data["months"] if month_data["month"] == 7)
@@ -233,16 +241,22 @@ def test_yearly_summary_single_transaction(client, db):
     assert july["balance"] == "1000.00"
 
 
-def test_yearly_summary_multiple_months(client, db):
+def test_yearly_summary_multiple_months(authenticated_client, db):
     """Ensure yearly summaries include values from multiple months."""
     create_transaction(
-        client, amount="1000", db=db, created_at=datetime(2026, 6, 10, tzinfo=UTC)
+        authenticated_client,
+        amount="1000",
+        db=db,
+        created_at=datetime(2026, 6, 10, tzinfo=UTC),
     )
     create_transaction(
-        client, amount="500", db=db, created_at=datetime(2026, 7, 10, tzinfo=UTC)
+        authenticated_client,
+        amount="500",
+        db=db,
+        created_at=datetime(2026, 7, 10, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}/yearly?year=2026")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=2026")
     data = response.json()
 
     june = next(month_data for month_data in data["months"] if month_data["month"] == 6)
@@ -252,18 +266,18 @@ def test_yearly_summary_multiple_months(client, db):
     assert july["income"] == "500.00"
 
 
-def test_yearly_summary_full_year(client, db):
+def test_yearly_summary_full_year(authenticated_client, db):
     """Create one income transaction per month and verify yearly totals."""
     # Create an income transaction for each month with amount = month * 100
     for month in range(1, 13):
         create_transaction(
-            client,
+            authenticated_client,
             db=db,
             amount=str(month * 100),
             created_at=datetime(2026, month, 10, tzinfo=UTC),
         )
 
-    response = client.get(f"{SUMMARY_URL}/yearly?year=2026")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=2026")
     assert response.status_code == 200
 
     data = response.json()
@@ -278,35 +292,41 @@ def test_yearly_summary_full_year(client, db):
         assert month_data["balance"] == expected
 
 
-def test_yearly_summary_ignores_other_years(client, db):
+def test_yearly_summary_ignores_other_years(authenticated_client, db):
     """Ensure yearly summaries ignore transactions from other years."""
     create_transaction(
-        client, amount="1000", db=db, created_at=datetime(2025, 7, 10, tzinfo=UTC)
+        authenticated_client,
+        amount="1000",
+        db=db,
+        created_at=datetime(2025, 7, 10, tzinfo=UTC),
     )
     create_transaction(
-        client, amount="500", db=db, created_at=datetime(2026, 7, 10, tzinfo=UTC)
+        authenticated_client,
+        amount="500",
+        db=db,
+        created_at=datetime(2026, 7, 10, tzinfo=UTC),
     )
 
-    response = client.get(f"{SUMMARY_URL}/yearly?year=2026")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=2026")
     data = response.json()
 
     july = next(month_data for month_data in data["months"] if month_data["month"] == 7)
     assert july["income"] == "500.00"
 
 
-def test_yearly_summary_invalid_year(client):
+def test_yearly_summary_invalid_year(authenticated_client):
     """Ensure malformed years are rejected by validation."""
-    response = client.get(f"{SUMMARY_URL}/yearly?year=20xx")
+    response = authenticated_client.get(f"{SUMMARY_URL}/yearly?year=20xx")
 
     assert response.status_code == 422
 
 
-def test_category_summary(client):
-    create_transaction(client, amount="100.00", category="Food")
-    create_transaction(client, amount="50.00", category="Food")
-    create_transaction(client, amount="1000.00", category="Salary")
+def test_category_summary(authenticated_client):
+    create_transaction(authenticated_client, amount="100.00", category="Food")
+    create_transaction(authenticated_client, amount="50.00", category="Food")
+    create_transaction(authenticated_client, amount="1000.00", category="Salary")
 
-    response = client.get(f"{SUMMARY_URL}/category")
+    response = authenticated_client.get(f"{SUMMARY_URL}/category")
 
     assert response.status_code == 200
 
@@ -319,21 +339,21 @@ def test_category_summary(client):
     assert salary["total"] == "1000.00"
 
 
-def test_category_summary_empty(client):
+def test_category_summary_empty(authenticated_client):
     """Ensure category summaries return an empty list when there are no transactions."""
-    response = client.get(f"{SUMMARY_URL}/category")
+    response = authenticated_client.get(f"{SUMMARY_URL}/category")
 
     assert response.status_code == 200
     assert response.json() == []
 
 
-def test_category_summary_multiple_transactions_same_category(client):
+def test_category_summary_multiple_transactions_same_category(authenticated_client):
     """Ensure category totals aggregate multiple transactions in the same category."""
-    create_transaction(client, amount="25.00", category="Food")
-    create_transaction(client, amount="75.00", category="Food")
-    create_transaction(client, amount="100.00", category="Food")
+    create_transaction(authenticated_client, amount="25.00", category="Food")
+    create_transaction(authenticated_client, amount="75.00", category="Food")
+    create_transaction(authenticated_client, amount="100.00", category="Food")
 
-    response = client.get(f"{SUMMARY_URL}/category")
+    response = authenticated_client.get(f"{SUMMARY_URL}/category")
 
     data = response.json()
 
@@ -342,12 +362,12 @@ def test_category_summary_multiple_transactions_same_category(client):
     assert food["total"] == "200.00"
 
 
-def test_category_summary_nomralization(client):
+def test_category_summary_nomralization(authenticated_client):
     """Ensure category summaries normalize category names consistently."""
-    create_transaction(client, amount="100.00", category="food")
-    create_transaction(client, amount="50.00", category="  FOOD  ")
+    create_transaction(authenticated_client, amount="100.00", category="food")
+    create_transaction(authenticated_client, amount="50.00", category="  FOOD  ")
 
-    response = client.get(f"{SUMMARY_URL}/category")
+    response = authenticated_client.get(f"{SUMMARY_URL}/category")
 
     data = response.json()
 
@@ -356,12 +376,12 @@ def test_category_summary_nomralization(client):
     assert food["total"] == "150.00"
 
 
-def test_category_summary_decimal_precision(client):
+def test_category_summary_decimal_precision(authenticated_client):
     """Ensure category summary totals preserve decimal precision."""
-    create_transaction(client, amount="10.25", category="Food")
-    create_transaction(client, amount="20.75", category="Food")
+    create_transaction(authenticated_client, amount="10.25", category="Food")
+    create_transaction(authenticated_client, amount="20.75", category="Food")
 
-    response = client.get(f"{SUMMARY_URL}/category")
+    response = authenticated_client.get(f"{SUMMARY_URL}/category")
 
     data = response.json()
 

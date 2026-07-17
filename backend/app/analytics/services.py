@@ -7,21 +7,26 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.analytics import CategorySummary, MonthlySummary, YearlySummary
-from app.core import TransactionType  # check this
+from app.core import TransactionType
 from app.core.exceptions import InvalidMonthError, InvalidYearError
-from app.models import Transaction
+from app.models import Transaction, User
 
 
 def get_transaction_total(
-    db: Session, transaction_type: TransactionType, start_date: date, end_date: date
+    db: Session,
+    transaction_type: TransactionType,
+    start_date: date,
+    end_date: date,
+    current_user: User,
 ) -> Decimal:
     """Return the total amount for one transaction type within a date range."""
     return (
-        db.query(func.coalesce(func.sum(Transaction.amount), 0))
+        db.query(func.coalesce(func.sum(Transaction.amount), Decimal("0.00")))
         .filter(
             Transaction.transaction_type == transaction_type,
             Transaction.created_at >= start_date,
             Transaction.created_at < end_date,
+            Transaction.user_id == current_user.id,
         )
         .scalar()
     )
@@ -47,7 +52,7 @@ def get_month_range(month: str) -> tuple[date, date]:
     return start, end
 
 
-def get_monthly_summary(db: Session, month: str) -> MonthlySummary:
+def get_monthly_summary(db: Session, month: str, current_user: User) -> MonthlySummary:
     """Generate a monthly income and expense summary.
 
     Args:
@@ -59,15 +64,27 @@ def get_monthly_summary(db: Session, month: str) -> MonthlySummary:
     """
     start_date, end_date = get_month_range(month)
 
-    income = get_transaction_total(db, TransactionType.income, start_date, end_date)
-    expense = get_transaction_total(db, TransactionType.expense, start_date, end_date)
+    income = get_transaction_total(
+        db=db,
+        transaction_type=TransactionType.income,
+        start_date=start_date,
+        end_date=end_date,
+        current_user=current_user,
+    )
+    expense = get_transaction_total(
+        db=db,
+        transaction_type=TransactionType.expense,
+        start_date=start_date,
+        end_date=end_date,
+        current_user=current_user,
+    )
 
     return MonthlySummary(
         month=start_date.month, income=income, expense=expense, balance=income - expense
     )
 
 
-def get_yearly_summary(db: Session, year: str) -> YearlySummary:
+def get_yearly_summary(db: Session, year: str, current_user: User) -> YearlySummary:
     """Generate a yearly summary of monthly income and expenses.
 
     Args:
@@ -84,12 +101,14 @@ def get_yearly_summary(db: Session, year: str) -> YearlySummary:
     months = []
     for month in range(1, 13):
         month_string = f"{year}-{month:02d}"
-        summary = get_monthly_summary(db=db, month=month_string)
+        summary = get_monthly_summary(
+            db=db, month=month_string, current_user=current_user
+        )
         months.append(summary)
     return YearlySummary(year=order_year, months=months)
 
 
-def get_category_summary(db: Session) -> list[CategorySummary]:
+def get_category_summary(db: Session, current_user: User) -> list[CategorySummary]:
     """Return total transaction amounts grouped by category.
 
     Args:
@@ -100,6 +119,7 @@ def get_category_summary(db: Session) -> list[CategorySummary]:
     """
     rows = (
         db.query(Transaction.category, func.sum(Transaction.amount))
+        .filter(Transaction.user_id == current_user.id)
         .group_by(Transaction.category)
         .all()
     )

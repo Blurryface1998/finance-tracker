@@ -44,9 +44,11 @@ def test_login_user(client):
         password="Mypassword1234567",
     )
 
+    data = response.json()
+
     assert response.status_code == 200
-    assert response.json()["email"] == "john_doe@example.com"
-    assert response.json()["username"] == "john_doe"
+    assert "access_token" in data
+    assert data["token_type"] == "bearer"
 
 
 def test_login_invalid_password_fails(client):

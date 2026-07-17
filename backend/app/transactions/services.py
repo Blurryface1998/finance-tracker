@@ -1,24 +1,37 @@
 from sqlalchemy import tuple_
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import (DatabaseError, InvalidCursorError,
-                                 TransactionNotFoundError)
+from app.core.exceptions import (
+    DatabaseError,
+    InvalidCursorError,
+    TransactionNotFoundError,
+)
 from app.core.logging import logger
-from app.models import Transaction
+from app.models import Transaction, User
 from app.transactions import schemas
 from app.utils.cursor import decode_cursor, encode_cursor
 
 
-def _get_transaction(db: Session, transaction_id: int) -> Transaction:
+def _get_user_transaction(
+    db: Session, transaction_id: int, current_user: User
+) -> Transaction:
     """Return a transaction by ID or raise a not-found exception."""
-    transaction = db.get(Transaction, transaction_id)
+    transaction = (
+        db.query(Transaction)
+        .filter(
+            Transaction.id == transaction_id, Transaction.user_id == current_user.id
+        )
+        .one_or_none()
+    )
 
     if not transaction:
         raise TransactionNotFoundError(transaction_id)
     return transaction
 
 
-def create_transaction(db: Session, data: schemas.TransactionCreate) -> Transaction:
+def create_transaction(
+    db: Session, data: schemas.TransactionCreate, current_user: User
+) -> Transaction:
     """Create and save a new transaction.
 
     Args:
@@ -39,6 +52,7 @@ def create_transaction(db: Session, data: schemas.TransactionCreate) -> Transact
         amount=data.amount,
         category=data.category,
         transaction_type=data.transaction_type,
+        user_id=current_user.id,
     )
 
     try:
@@ -55,6 +69,7 @@ def create_transaction(db: Session, data: schemas.TransactionCreate) -> Transact
 
 def get_transactions(
     db: Session,
+    current_user: User,
     limit: int = 20,
     cursor: schemas.PaginationCursor | None = None,
     filters: schemas.TransactionFilter | None = None,
@@ -78,14 +93,17 @@ def get_transactions(
             raise InvalidCursorError(cursor) from exc
 
     logger.info(
-        "Fetching transactions: limit=%s cursor=%s filters=%s",
+        "Fetching transactions: user_id=%s limit=%s cursor=%s filters=%s",
+        current_user.id,
         limit,
         cursor is not None,
         filters,
     )
 
-    query = db.query(Transaction).order_by(
-        Transaction.created_at.desc(), Transaction.id.desc()
+    query = (
+        db.query(Transaction)
+        .filter(Transaction.user_id == current_user.id)
+        .order_by(Transaction.created_at.desc(), Transaction.id.desc())
     )
 
     filters = filters or schemas.TransactionFilter()
@@ -131,7 +149,9 @@ def get_transactions(
     )
 
 
-def get_transaction(db: Session, transaction_id: int) -> Transaction:
+def get_transaction(
+    db: Session, transaction_id: int, current_user: User
+) -> Transaction:
     """Retrieve a single transaction by ID.
 
     Args:
@@ -145,12 +165,17 @@ def get_transaction(db: Session, transaction_id: int) -> Transaction:
         TransactionNotFoundError: If the transaction does not exist.
     """
     logger.info("Fetching transaction: id=%s", transaction_id)
-    return _get_transaction(db, transaction_id)
+    return _get_user_transaction(
+        db=db, transaction_id=transaction_id, current_user=current_user
+    )
 
 
 def update_transaction(
-    db: Session, transaction_id: int, data: schemas.TransactionUpdate
-) -> Transaction | None:
+    db: Session,
+    transaction_id: int,
+    data: schemas.TransactionUpdate,
+    current_user: User,
+) -> Transaction:
     """Update an existing transaction.
 
     Args:
@@ -162,7 +187,9 @@ def update_transaction(
         The updated Transaction instance, or None if not found.
     """
     logger.info("Updating transaction: id=%s", transaction_id)
-    transaction = _get_transaction(db, transaction_id)
+    transaction = _get_user_transaction(
+        db=db, transaction_id=transaction_id, current_user=current_user
+    )
 
     transaction.description = data.description
     transaction.amount = data.amount
@@ -175,7 +202,7 @@ def update_transaction(
     return transaction
 
 
-def delete_transaction(db: Session, transaction_id: int) -> None:
+def delete_transaction(db: Session, transaction_id: int, current_user: User) -> None:
     """Delete a transaction by ID and persist the change.
 
     Args:
@@ -183,16 +210,23 @@ def delete_transaction(db: Session, transaction_id: int) -> None:
         transaction_id: Primary key of the transaction.
     """
     logger.info("Deleting transaction: id=%s", transaction_id)
-    transaction = _get_transaction(db, transaction_id)
+    transaction = _get_user_transaction(db, transaction_id, current_user=current_user)
 
     db.delete(transaction)
     db.commit()
-    logger.info("Transaction deleted successfully: id=%s", transaction_id)
+    logger.info(
+        "Transaction deleted successfully: id=%s user_id=%s",
+        transaction_id,
+        current_user.id,
+    )
 
 
 def patch_transaction(
-    db: Session, transaction_id: int, data: schemas.TransactionPatch
-) -> Transaction | None:
+    db: Session,
+    transaction_id: int,
+    data: schemas.TransactionPatch,
+    current_user: User,
+) -> Transaction:
     """Apply partial updates to an existing transaction.
 
     Args:
@@ -204,7 +238,7 @@ def patch_transaction(
         The updated Transaction instance, or None if not found.
     """
     logger.info("Patching transaction: id=%s", transaction_id)
-    transaction = _get_transaction(db, transaction_id)
+    transaction = _get_user_transaction(db, transaction_id, current_user=current_user)
 
     if data.description is not None:
         transaction.description = data.description.strip().title()

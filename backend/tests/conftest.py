@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.core.database import Base, get_db
 from app.main import app
+from app.models.user import User
 
 TEST_DATABASE_URL = "sqlite:///:memory:"
 
@@ -24,6 +25,44 @@ def setup_database():
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
+
+
+@pytest.fixture
+def auth_headers(client):
+
+    client.post(
+        "/auth/register",
+        json={
+            "username": "john_doe",
+            "email": "john_doe@example.com",
+            "password": "Mypassword1234567",
+        },
+    )
+    response = client.post(
+        "/auth/login",
+        json={"email": "john_doe@example.com", "password": "Mypassword1234567"},
+    )
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def authenticated_client(client, auth_headers):
+    client.headers = auth_headers
+    return client
+
+
+@pytest.fixture
+def test_user(db):
+    user = User(
+        username="john_doe", email="john_doe@example.com", password_hash="fake_hash"
+    )
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    return user
 
 
 @pytest.fixture(autouse=True)
