@@ -89,6 +89,15 @@ def login_user(client, **overrides):
     )
 
 
+def get_auth_headers(client, **overrides):
+    login_response = login_user(client, **overrides)
+    data = login_response.json()
+    token = data["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    return headers
+
+
 def create_transaction_json(client, **overrides):
     """Create a transaction and return its JSON payload directly."""
     return create_transaction(client=client, **overrides).json()
