@@ -2,13 +2,13 @@
 
 from fastapi import FastAPI
 
+from app.analytics.routes import router as analytics_router
+from app.auth.routes import router as authentication_router
 from app.core.database import Base, engine
 from app.core.exceptions.base import AppException
 from app.core.exceptions.exception_handlers import app_exception_handler
 from app.core.logging import logger
-from app.analytics.routes import router as analytics_router
 from app.transactions.routes import router as transaction_router
-from app.auth.routes import router as authentication_router
 
 app = FastAPI(title="Finance Tracker API")
 logger.info("Initializing Finance Tracker API")

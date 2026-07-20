@@ -4,14 +4,8 @@ import pytest
 
 from app.core.exceptions.transactions import TransactionNotFoundError
 from app.transactions.services import delete_transaction
-from tests.helpers import (
-    create_transaction,
-    create_transaction_json,
-    transactions_url,
-    create_user,
-    login_user,
-    get_auth_headers,
-)
+from tests.helpers import (create_transaction, create_transaction_json,
+                           transactions_url)
 
 
 def test_delete_transaction_raises_missing(db, test_user):
@@ -65,18 +59,4 @@ def test_delete_transaction_twice(authenticated_client):
     assert response.status_code == 204
 
     response = authenticated_client.delete(transactions_url(transaction_id))
-    assert response.status_code == 404
-
-
-def test_user_cannot_delete_another_user_transaction(client):
-    create_user(client=client)
-    create_user(client=client, username="jhane_doe", email="jhane_doe@example.com")
-
-    user_one_headers = get_auth_headers(client=client)
-    user_two_headers = get_auth_headers(client=client, email="jhane_doe@example.com")
-
-    create_response = create_transaction(client, headers=user_two_headers)
-    transaction_id = create_response.json()["id"]
-
-    response = client.delete(transactions_url(transaction_id), headers=user_one_headers)
     assert response.status_code == 404

@@ -1,7 +1,6 @@
 """Test helpers for generating transaction payloads and requests."""
 
-from app.models import Transaction
-from app.models import User
+from app.models import Transaction, User
 
 TRANSACTIONS_URL = "/transactions"
 SUMMARY_URL = "/analytics"
