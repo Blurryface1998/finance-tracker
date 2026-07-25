@@ -1,0 +1,24 @@
+.features-card {
+  width: 290px;
+  height: 300px;
+  border-radius: 50px;
+  padding: 100px 60px 0px 60px;
+  background: linear-gradient(
+    135deg,
+    rgb(0, 255, 214) 0%,
+    rgb(8, 226, 96) 100%
+  );
+  text-align: center;
+
+  &__title {
+    color: #00894d;
+    font-weight: 900;
+    font-size: 20px;
+  }
+
+  &__description {
+    color: rgba(0, 137, 78, 0.7647058824);
+    font-size: 15px;
+    margin-block: 20px;
+  }
+}

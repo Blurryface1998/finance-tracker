@@ -1,13 +1,12 @@
-import Hero from "./components/Hero";
-import Features from "./components/Features";
+import HeroSection from "./components/Hero/HeroSection";
+import FeaturesSection from "./components/Features/FeaturesSection";
 import Footer from "../../shared/components/Footer/Footer";
-
 function LandingPage() {
   return (
     <>
       <main>
-        <Hero />
-        <Features />
+        <HeroSection />
+        <FeaturesSection />
       </main>
       <Footer />
     </>

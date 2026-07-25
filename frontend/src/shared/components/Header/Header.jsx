@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import logo from "../../../assets/logo.svg";
+import "./Header.scss";
+import logo from "../../../assets/logo.jpg";
 function Header({ logoLink = "/", links = [] }) {
   return (
     <header>

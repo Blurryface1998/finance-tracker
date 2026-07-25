@@ -1,0 +1,11 @@
+.features {
+  &__container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  &__title {
+    text-align: center;
+    grid-column: 1 / -1;
+  }
+}
