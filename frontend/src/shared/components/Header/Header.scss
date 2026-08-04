@@ -1,8 +1,27 @@
-header {
-  .logo-link {
-    img {
-      width: 100px;
-      height: 100px;
+.header {
+  padding-block: var(--spacing-medium);
+  background-color: #f5f7ff;
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__logo {
+    display: block;
+  }
+  &__image {
+    width: 100px;
+    height: 100px;
+  }
+
+  &__navigation {
+    display: flex;
+    gap: var(--spacing-medium);
+    &-link {
+      background: #7257fa;
+      color: #e9f7f3;
+      padding: 10px;
+      border-radius: 7px;
     }
   }
 }

@@ -1,0 +1,13 @@
+.footer {
+  padding-block: var(--spacing-large);
+
+  &__content {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__copyright {
+    color: var(--color-text);
+    font-size: 0.875rem;
+  }
+}
