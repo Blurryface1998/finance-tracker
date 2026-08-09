@@ -5,8 +5,8 @@ function Footer() {
   return (
     <footer className="footer">
       <Container>
-        <div className="footer_content">
-          <span className="footer_copyright">
+        <div className="footer__content">
+          <span className="footer__copyright">
             {"\u00A9"} {new Date().getFullYear()} Finance Tracker
           </span>
         </div>

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Container from "../Container/Container";
 import "./Header.scss";
-import logo from "../../../assets/logo.jpg";
+import logo from "../../../assets/logo.png";
 function Header({ logoLink = "/", links = [] }) {
   return (
     <header className="header">

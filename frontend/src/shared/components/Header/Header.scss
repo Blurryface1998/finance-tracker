@@ -1,6 +1,7 @@
 .header {
   padding-block: var(--spacing-medium);
-  background-color: #f5f7ff;
+  background-color: var(--header-color);
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 0px;
   &__content {
     display: flex;
     justify-content: space-between;
@@ -18,10 +19,11 @@
     display: flex;
     gap: var(--spacing-medium);
     &-link {
-      background: #7257fa;
-      color: #e9f7f3;
-      padding: 10px;
-      border-radius: 7px;
+      display: inline-block;
+      background: var(--button-color);
+      color: var(--button-text-color);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
     }
   }
 }

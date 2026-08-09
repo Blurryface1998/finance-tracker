@@ -1,23 +1,20 @@
 .features-card {
-  width: 290px;
-  height: 300px;
-  border-radius: 50px;
-  padding: 100px 60px 0px 60px;
-  background: linear-gradient(
-    135deg,
-    rgb(0, 255, 214) 0%,
-    rgb(8, 226, 96) 100%
-  );
+  width: 100%;
+  min-height: auto;
+  padding: 18px;
+  border-radius: 17px;
+  background-color: var(--card-color);
   text-align: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
   &__title {
-    color: #00894d;
+    color: var(--text-color);
     font-weight: 900;
     font-size: 20px;
   }
 
   &__description {
-    color: rgba(0, 137, 78, 0.7647058824);
+    color: var(--text-color);
     font-size: 15px;
     margin-block: 20px;
   }
