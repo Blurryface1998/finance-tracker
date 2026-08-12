@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import "./HeroSection.scss";
 import Container from "../../../../shared/components/Container/Container";
-
+import ButtonLink from "../../../../shared/components/ButtonLink/ButtonLink";
+import SplitLine from "../../../../assets/SplitLine.svg";
 function HeroSection() {
   return (
     <section className="hero">
@@ -16,10 +17,13 @@ function HeroSection() {
             finances.
           </p>
         </div>
+
+        <img className="hero__line" src={SplitLine} alt="" aria-hidden="true" />
+
         <div className="hero__actions">
-          <Link className="hero__button" to="/register">
+          <ButtonLink variant="hero" to="/register">
             Register
-          </Link>
+          </ButtonLink>
         </div>
       </Container>
     </section>

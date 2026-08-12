@@ -13,27 +13,46 @@
   }
 
   &__subtitle {
-    margin-top: var(--sacing-small);
-    font-size: 1.25rem;
-    margin-block: 4px 10px;
+    font-size: 1.15rem;
   }
 
   &__description {
-    margin-top: var(--sacing-medium);
+    margin-top: 1.5rem;
     line-height: 1.6;
+    color: var(--text-color-secondary);
+    font-size: 1rem;
+  }
+
+  &__line {
+    margin-inline: auto;
+    margin-block: 3.5rem;
   }
 
   &__actions {
     margin-block: var(--spacing-large);
     text-align: center;
   }
+}
 
-  &__button {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
+@media screen and (min-width: 768px) {
+}
 
-    background-color: var(--button-color);
-    color: var(--button-text-color);
-    border-radius: var(--border-radius);
+@media screen and (min-width: 1024px) {
+  .hero {
+    &__title {
+      font-size: 2.5rem;
+    }
+
+    &__subtitle {
+      font-size: 2rem;
+    }
+
+    &__description {
+      font-size: 1.5rem;
+    }
+
+    &__line {
+      margin-block: 4.563rem;
+    }
   }
 }

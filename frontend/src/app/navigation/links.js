@@ -2,10 +2,12 @@ export const landingLinks = [
   {
     label: "Register",
     path: "/register",
+    type: "register",
   },
   {
     label: "Login",
     path: "/login",
+    type: "login",
   },
 ];
 export const registerLinks = [

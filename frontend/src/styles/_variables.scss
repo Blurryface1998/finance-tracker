@@ -1,12 +1,18 @@
 :root {
   /* Colors: */
   --primary-color: #2563eb;
-  --text-color: #111827;
+  /*--text-color: #111827;*/
+  --text-color: #191919;
+  --text-color-secondary: #525256;
   --header-color: #e6ebff;
-  --background-color: #f5f7ff;
+  /*--background-color: #f5f7ff;*/
+  --background-color: #f4f5f7;
   --card-color: #ffffff;
-  --button-text-color: #e9f7f3;
-  --button-color: #0d50a9;
+  /*--button-text-color: #e9f7f3;*/
+  --button-text-color: #ffffff;
+  /*--button-color: #0d50a9;*/
+  --button-color: #299d91;
+  --button-color-hover: #258e83;
 
   --color-tester-one-gradient-one: #014871;
   --color-tester-one-gradient-two: #a0ebcf;

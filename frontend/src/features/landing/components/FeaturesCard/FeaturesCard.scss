@@ -1,21 +1,33 @@
 .features-card {
   width: 100%;
   min-height: auto;
-  padding: 18px;
-  border-radius: 17px;
+  padding: 1.125rem;
+  border-radius: 1.063rem;
   background-color: var(--card-color);
   text-align: center;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
   &__title {
-    color: var(--text-color);
-    font-weight: 900;
-    font-size: 20px;
+    font-weight: 800;
+    font-size: 1.25rem;
   }
 
   &__description {
-    color: var(--text-color);
-    font-size: 15px;
-    margin-block: 20px;
+    color: var(--text-color-secondary);
+    font-size: 1rem;
+    margin-block: 1.25rem;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .features-card {
+    &__title {
+      font-size: 1.6rem;
+    }
+
+    &__description {
+      font-size: 1.125rem;
+      margin-block-start: 2rem;
+    }
   }
 }
