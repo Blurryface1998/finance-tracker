@@ -3,7 +3,7 @@
   min-height: auto;
   padding: 1.125rem;
   border-radius: 1.063rem;
-  background-color: var(--card-color);
+  background-color: var(--white-color);
   text-align: center;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
@@ -13,7 +13,7 @@
   }
 
   &__description {
-    color: var(--text-color-secondary);
+    color: var(--secondary-color);
     font-size: 1rem;
     margin-block: 1.25rem;
   }

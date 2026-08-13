@@ -1,5 +1,5 @@
 .hero {
-  padding-block: var(--spacing-large);
+  padding-block: 2rem;
 
   &__content {
     display: flex;
@@ -19,7 +19,7 @@
   &__description {
     margin-top: 1.5rem;
     line-height: 1.6;
-    color: var(--text-color-secondary);
+    color: var(--secondary-color);
     font-size: 1rem;
   }
 
@@ -29,7 +29,7 @@
   }
 
   &__actions {
-    margin-block: var(--spacing-large);
+    margin-block: 2rem;
     text-align: center;
   }
 }

@@ -1,6 +1,6 @@
 .footer {
-  padding-block: var(--spacing-large);
-  background-color: var(--header-color);
+  padding-block: 0.5rem;
+  background-color: var(--main-secondary-color);
 
   &__content {
     display: flex;
@@ -8,7 +8,7 @@
   }
 
   &__copyright {
-    color: var(--color-text);
+    color: var(--gray-color-01);
     font-size: 0.875rem;
   }
 }

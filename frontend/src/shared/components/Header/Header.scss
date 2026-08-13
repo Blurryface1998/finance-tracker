@@ -1,6 +1,6 @@
 .header {
-  padding: var(--spacing-small);
-  background-color: var(--header-color);
+  padding: 0.5rem;
+  background-color: var(--main-secondary-color);
 
   &__content {
     display: flex;
@@ -13,11 +13,16 @@
   &__image {
     width: 100px;
     height: 100px;
+
+    @media screen and (min-width: 1024px) {
+      width: 125px;
+      height: 125px;
+    }
   }
 
   &__navigation {
     display: flex;
-    gap: var(--spacing-small);
+    gap: 0.5rem;
 
     .register {
       display: none;
@@ -25,17 +30,6 @@
       @media screen and (min-width: 768px) {
         display: block;
       }
-    }
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .header {
-    padding: var(--spacing-large);
-
-    &__image {
-      width: 125px;
-      height: 125px;
     }
   }
 }
