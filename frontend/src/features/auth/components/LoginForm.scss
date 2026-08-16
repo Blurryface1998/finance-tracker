@@ -7,62 +7,20 @@
     flex-direction: column;
     gap: 2rem;
   }
+
   &__inputs {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     gap: 1.5rem;
-
-    .input-label {
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      box-sizing: border-box;
-      border: 1px solid var(--gray-color-03);
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      background-color: transparent;
-    }
-
-    input::placeholder {
-      color: var(--gray-color-01);
-      opacity: 1;
-    }
-
-    input:focus {
-      border-color: var(--gray-color-02);
-      outline: none;
-    }
   }
-  &__email {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
+
+  .forgot-password {
+    color: var(--primary-color);
+    font-size: 0.75rem;
   }
+
   &__password {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-
-    .password-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .forgot-password {
-        color: var(--primary-color);
-        font-size: 0.75rem;
-      }
-    }
-
-    input {
-      padding-inline-end: 3rem;
-    }
-
     .show-password {
       position: absolute;
       bottom: 10px;
@@ -72,6 +30,9 @@
       cursor: pointer;
       display: flex;
       align-items: center;
+    }
+    input {
+      padding-inline-end: 3rem;
     }
   }
 

@@ -1,0 +1,39 @@
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__label {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  &__input-row {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--gray-color-03);
+    border-radius: 9px;
+    padding: 0.75rem 1rem;
+    background-color: transparent;
+  }
+
+  &__input::placeholder {
+    color: var(--gray-color-01);
+    opacity: 1;
+  }
+
+  &__input:focus {
+    border-color: var(--gray-color-02);
+    outline: none;
+  }
+}
