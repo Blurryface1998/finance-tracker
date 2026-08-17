@@ -9,6 +9,8 @@ function FormField({
   labelAction,
   eyeElement,
   className = "",
+  value,
+  onChange,
 }) {
   return (
     <div className="form-field">
@@ -25,6 +27,8 @@ function FormField({
           name={name}
           type={type}
           placeholder={placeholder}
+          value={value}
+          onChange={onChange}
           required={required}
         />
         {eyeElement}

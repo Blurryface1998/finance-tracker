@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Form, Link } from "react-router-dom";
 import Container from "../../../shared/components/Container/Container";
 import ButtonLink from "../../../shared/components/ButtonLink/ButtonLink";
@@ -5,6 +6,8 @@ import Eye from "../../../assets/eye.svg";
 import FormField from "./FormField/FormField";
 import "./LoginForm.scss";
 function LoginForm() {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+
   return (
     <form className="form">
       <div className="form__content">
@@ -14,6 +17,10 @@ function LoginForm() {
             name="email"
             type="email"
             placeholder="email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             required
           />
 
@@ -24,6 +31,10 @@ function LoginForm() {
             placeholder="******"
             required
             className="form__password"
+            value={formData}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
             labelAction={
               <Link className="forgot-password" to="#">
                 Forgot password?
@@ -39,7 +50,7 @@ function LoginForm() {
         <div className="form__action">
           <div>
             <label className="user-remember" htmlFor="remember">
-              Keep me sign in
+              Keep me signed in
               <input type="checkbox" id="remember" />
               <span className="checkmark"></span>
             </label>

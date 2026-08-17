@@ -6,16 +6,21 @@ function ButtonLink({
   to,
   variant = "header",
   classname = "",
+  type = "button",
   ...props
 }) {
+  const buttonClassName = `btn-link btn-link--${variant} ${classname}`;
+  if (to) {
+    return (
+      <Link to={to} className={buttonClassName} {...props}>
+        {children}
+      </Link>
+    );
+  }
   return (
-    <Link
-      to={to}
-      className={`btn-link btn-link--${variant} ${classname}`}
-      {...props}
-    >
+    <button className={buttonClassName} type={type} {...props}>
       {children}
-    </Link>
+    </button>
   );
 }
 

@@ -1,0 +1,76 @@
+# =====================
+# Python
+# =====================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# =====================
+# Virtual environment
+# =====================
+venv/
+.venv/
+env/
+
+# =====================
+# Environment variables (VERY IMPORTANT)
+# =====================
+.env
+*.env
+
+# =====================
+# FastAPI / backend runtime
+# =====================
+*.sqlite3
+*.db
+
+# If you later add uploads or temp files
+uploads/
+tmp/
+temp/
+
+# =====================
+# Testing
+# =====================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# =====================
+# Logs
+# =====================
+*.log
+logs/
+
+# =====================
+# IDEs
+# =====================
+.vscode/
+.idea/
+
+# =====================
+# OS files
+# =====================
+.DS_Store
+Thumbs.db
+
+# =====================
+# Migrations (IMPORTANT if using Alembic)
+# =====================
+# Usually you DO commit alembic/, but NOT generated artifacts
+alembic/versions/__pycache__/
+
+# =====================
+# Build / packaging
+# =====================
+dist/
+build/
+*.egg-info/
+
+# Docker
+docker-compose.override.yml
+
+# Local scripts
+scripts/local_*.sh
