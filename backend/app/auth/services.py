@@ -23,7 +23,8 @@ def create_user(db: Session, user_data: schemas.UserCreate) -> User:
     hashed_password = hash_password(user_data.password)
     # create user
     user = User(
-        username=user_data.username,
+        name=user_data.name,
+        last_name=user_data.last_name,
         email=user_data.email,
         password_hash=hashed_password,
     )

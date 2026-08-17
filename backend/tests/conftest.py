@@ -33,7 +33,8 @@ def auth_headers(client):
     client.post(
         "/auth/register",
         json={
-            "username": "john_doe",
+            "name": "john",
+            "last_name": "doe",
             "email": "john_doe@example.com",
             "password": "Mypassword1234567",
         },
@@ -55,7 +56,10 @@ def authenticated_client(client, auth_headers):
 @pytest.fixture
 def test_user(db):
     user = User(
-        username="john_doe", email="john_doe@example.com", password_hash="fake_hash"
+        name="john",
+        last_name="doe",
+        email="john_doe@example.com",
+        password_hash="fake_hash",
     )
 
     db.add(user)

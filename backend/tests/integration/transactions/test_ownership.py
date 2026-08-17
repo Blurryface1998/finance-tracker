@@ -1,11 +1,11 @@
-
 from tests.helpers import (create_transaction, create_user, get_auth_headers,
                            transactions_url)
 
 
 def test_user_cannot_get_another_user_transaction(client):
+    """Test that a user cannot get another user's transaction."""
     create_user(client=client)
-    create_user(client=client, username="jhane_doe", email="jhane_doe@example.com")
+    create_user(client=client, name="jhane", email="jhane_doe@example.com")
 
     user_one_headers = get_auth_headers(client=client)
     user_two_headers = get_auth_headers(client=client, email="jhane_doe@example.com")
@@ -20,12 +20,13 @@ def test_user_cannot_get_another_user_transaction(client):
 
 
 def test_user_cannot_update_another_user_transaction(client):
+    """Test that a user cannot update another user's transaction."""
     create_user(
         client=client,
     )
     create_user(
         client=client,
-        username="jhane_doe",
+        name="jhane",
         email="jhane_doe@example.com",
     )
 
@@ -52,12 +53,13 @@ def test_user_cannot_update_another_user_transaction(client):
 
 
 def test_user_cannot_patch_another_user_transaction(client):
+    """Test that a user cannot patch another user's transaction."""
     create_user(
         client=client,
     )
     create_user(
         client=client,
-        username="jhane_doe",
+        name="jhane",
         email="jhane_doe@example.com",
     )
 
@@ -84,8 +86,9 @@ def test_user_cannot_patch_another_user_transaction(client):
 
 
 def test_user_cannot_delete_another_user_transaction(client):
+    """Test that a user cannot delete another user's transaction."""
     create_user(client=client)
-    create_user(client=client, username="jhane_doe", email="jhane_doe@example.com")
+    create_user(client=client, name="jhane", email="jhane_doe@example.com")
 
     user_one_headers = get_auth_headers(client=client)
     user_two_headers = get_auth_headers(client=client, email="jhane_doe@example.com")

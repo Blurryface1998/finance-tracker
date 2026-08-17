@@ -1,5 +1,7 @@
 """Test helpers for generating transaction payloads and requests."""
 
+from datetime import UTC, datetime
+
 from app.models import Transaction, User
 
 TRANSACTIONS_URL = "/transactions"
@@ -22,7 +24,8 @@ def transaction_payload(**overrides):
 def user_payload(**overrides):
     """Build a default registration payload and apply any overrides."""
     base = {
-        "username": "john_doe",
+        "name": "john",
+        "last_name": "doe",
         "email": "john_doe@example.com",
         "password": "Mypassword1234567",
     }
@@ -41,7 +44,10 @@ def user_login_payload(**overrides):
 
 
 def create_transaction(client, headers=None, db=None, created_at=None, **overrides):
-    """Send a create transaction request through the test client."""
+    """Send a create transaction request through the test client.
+
+    When db is provided without created_at, defaults to July 1, 2026.
+    """
     payload_overrides = {k: v for k, v in overrides.items() if k != "created_at"}
 
     response = client.post(
@@ -53,7 +59,11 @@ def create_transaction(client, headers=None, db=None, created_at=None, **overrid
     if created_at is not None and db is None:
         raise ValueError("db is required when created_at is provided")
 
-    if db is not None and created_at is not None:
+    if db is not None:
+        # Default to July 1, 2026 if no created_at provided
+        if created_at is None:
+            created_at = datetime(2026, 7, 1, tzinfo=UTC)
+
         transaction_id = response.json()["id"]
 
         transaction = db.get(Transaction, transaction_id)

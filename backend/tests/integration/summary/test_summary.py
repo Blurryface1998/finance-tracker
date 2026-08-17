@@ -5,10 +5,10 @@ from datetime import UTC, datetime
 from tests.helpers import SUMMARY_URL, create_transaction
 
 
-def test_monthly_summary_income_only(authenticated_client):
+def test_monthly_summary_income_only(authenticated_client, db):
     """Verify monthly summary returns total income for the requested month."""
-    create_transaction(authenticated_client, amount="100")
-    create_transaction(authenticated_client, amount="200")
+    create_transaction(authenticated_client, amount="100", db=db)
+    create_transaction(authenticated_client, amount="200", db=db)
 
     response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
@@ -21,12 +21,14 @@ def test_monthly_summary_income_only(authenticated_client):
     assert data["balance"] == "300.00"
 
 
-def test_monthly_expense_only(authenticated_client):
+def test_monthly_expense_only(authenticated_client, db):
     """Ensure monthly summaries return expense totals correctly."""
     create_transaction(
-        authenticated_client, amount="150.00", transaction_type="expense"
+        authenticated_client, amount="150.00", transaction_type="expense", db=db
     )
-    create_transaction(authenticated_client, amount="50.00", transaction_type="expense")
+    create_transaction(
+        authenticated_client, amount="50.00", transaction_type="expense", db=db
+    )
 
     response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
@@ -39,10 +41,14 @@ def test_monthly_expense_only(authenticated_client):
     assert data["balance"] == "-200.00"
 
 
-def test_monthly_summary_income_and_expenses(authenticated_client):
+def test_monthly_summary_income_and_expenses(authenticated_client, db):
     """Ensure monthly summaries include both income and expenses."""
-    create_transaction(authenticated_client, amount=2000, transaction_type="income")
-    create_transaction(authenticated_client, amount=500, transaction_type="expense")
+    create_transaction(
+        authenticated_client, amount=2000, transaction_type="income", db=db
+    )
+    create_transaction(
+        authenticated_client, amount=500, transaction_type="expense", db=db
+    )
 
     response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
@@ -70,31 +76,37 @@ def test_monthly_summary_empty(authenticated_client):
 
 def test_summary_ignores_other_months(authenticated_client, db):
     """Ensure summaries ignore transactions from other months."""
-    create_transaction(authenticated_client, amount="1000")
+    create_transaction(
+        authenticated_client,
+        amount="1000",
+        db=db,
+        created_at=datetime(2026, 6, 15, tzinfo=UTC),
+    )
 
     create_transaction(
         authenticated_client,
         db=db,
         amount="500",
-        created_at=datetime(2026, 6, 15, tzinfo=UTC),
+        created_at=datetime(2026, 7, 15, tzinfo=UTC),
     )
 
     response = authenticated_client.get(f"{SUMMARY_URL}/monthly?month=2026-07")
 
     data = response.json()
 
-    assert data["income"] == "1000.00"
+    assert data["income"] == "500.00"
 
 
-def test_summary_decimal_precision(authenticated_client):
+def test_summary_decimal_precision(authenticated_client, db):
     """Ensure summary values preserve decimal precision."""
-    create_transaction(authenticated_client, amount="10.25")
-    create_transaction(authenticated_client, amount="20.75")
+    create_transaction(authenticated_client, amount="10.25", db=db)
+    create_transaction(authenticated_client, amount="20.75", db=db)
 
     response = authenticated_client.get(f"{SUMMARY_URL}?month=2026-07")
 
     data = response.json()
 
+    assert response.status_code == 200
     assert data["income"] == "31.00"
 
 
@@ -321,10 +333,11 @@ def test_yearly_summary_invalid_year(authenticated_client):
     assert response.status_code == 422
 
 
-def test_category_summary(authenticated_client):
-    create_transaction(authenticated_client, amount="100.00", category="Food")
-    create_transaction(authenticated_client, amount="50.00", category="Food")
-    create_transaction(authenticated_client, amount="1000.00", category="Salary")
+def test_category_summary(authenticated_client, db):
+    """Ensure category summaries correctly aggregate transactions by category."""
+    create_transaction(authenticated_client, amount="100.00", category="Food", db=db)
+    create_transaction(authenticated_client, amount="50.00", category="Food", db=db)
+    create_transaction(authenticated_client, amount="1000.00", category="Salary", db=db)
 
     response = authenticated_client.get(f"{SUMMARY_URL}/category")
 
@@ -347,11 +360,11 @@ def test_category_summary_empty(authenticated_client):
     assert response.json() == []
 
 
-def test_category_summary_multiple_transactions_same_category(authenticated_client):
+def test_category_summary_multiple_transactions_same_category(authenticated_client, db):
     """Ensure category totals aggregate multiple transactions in the same category."""
-    create_transaction(authenticated_client, amount="25.00", category="Food")
-    create_transaction(authenticated_client, amount="75.00", category="Food")
-    create_transaction(authenticated_client, amount="100.00", category="Food")
+    create_transaction(authenticated_client, amount="25.00", category="Food", db=db)
+    create_transaction(authenticated_client, amount="75.00", category="Food", db=db)
+    create_transaction(authenticated_client, amount="100.00", category="Food", db=db)
 
     response = authenticated_client.get(f"{SUMMARY_URL}/category")
 
@@ -362,10 +375,10 @@ def test_category_summary_multiple_transactions_same_category(authenticated_clie
     assert food["total"] == "200.00"
 
 
-def test_category_summary_nomralization(authenticated_client):
+def test_category_summary_nomralization(authenticated_client, db):
     """Ensure category summaries normalize category names consistently."""
-    create_transaction(authenticated_client, amount="100.00", category="food")
-    create_transaction(authenticated_client, amount="50.00", category="  FOOD  ")
+    create_transaction(authenticated_client, amount="100.00", category="food", db=db)
+    create_transaction(authenticated_client, amount="50.00", category="  FOOD  ", db=db)
 
     response = authenticated_client.get(f"{SUMMARY_URL}/category")
 
@@ -376,10 +389,10 @@ def test_category_summary_nomralization(authenticated_client):
     assert food["total"] == "150.00"
 
 
-def test_category_summary_decimal_precision(authenticated_client):
+def test_category_summary_decimal_precision(authenticated_client, db):
     """Ensure category summary totals preserve decimal precision."""
-    create_transaction(authenticated_client, amount="10.25", category="Food")
-    create_transaction(authenticated_client, amount="20.75", category="Food")
+    create_transaction(authenticated_client, amount="10.25", category="Food", db=db)
+    create_transaction(authenticated_client, amount="20.75", category="Food", db=db)
 
     response = authenticated_client.get(f"{SUMMARY_URL}/category")
 

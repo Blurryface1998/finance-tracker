@@ -6,14 +6,20 @@ from . import utils
 
 
 class UserCreate(BaseModel):
-    username: str
+    name: str
+    last_name: str
     email: EmailStr
     password: str
 
-    @field_validator("username", mode="before")
+    @field_validator("name", mode="before")
     @classmethod
-    def username_validator(cls, value: str) -> str:
-        return utils.validate_username(value)
+    def name_validator(cls, value: str) -> str:
+        return utils.validate_name(value, max_length=50)
+
+    @field_validator("last_name", mode="before")
+    @classmethod
+    def last_name_validator(cls, value: str) -> str:
+        return utils.validate_name(value, max_length=100)
 
     @field_validator("email", mode="before")
     @classmethod
@@ -38,7 +44,8 @@ class LoginRequest(BaseModel):
 
 class UserResponse(BaseModel):
     id: int
-    username: str
+    name: str
+    last_name: str
     email: EmailStr
     created_at: datetime
 

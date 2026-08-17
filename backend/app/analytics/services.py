@@ -124,4 +124,16 @@ def get_category_summary(db: Session, current_user: User) -> list[CategorySummar
         .all()
     )
 
-    return [CategorySummary(category=category, total=total) for category, total in rows]
+    # Normalize categories: strip whitespace and title-case
+    normalized_summary = {}
+    for category, total in rows:
+        normalized_category = category.strip().title() if category else category
+        if normalized_category in normalized_summary:
+            normalized_summary[normalized_category] += total
+        else:
+            normalized_summary[normalized_category] = total
+
+    return [
+        CategorySummary(category=cat, total=total)
+        for cat, total in normalized_summary.items()
+    ]

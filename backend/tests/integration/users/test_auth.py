@@ -5,7 +5,8 @@ def test_register_user(client):
     """Verify that a user can register successfully and receives user details."""
     response = create_user(
         client=client,
-        username="john_doe",
+        name="John",
+        last_name="Doe",
         email="john_doe@example.com",
         password="Mypassword1234567",
     )
@@ -14,7 +15,8 @@ def test_register_user(client):
 
     data = response.json()
     assert data["email"] == "john_doe@example.com"
-    assert data["username"] == "john_doe"
+    assert data["name"] == "John"
+    assert data["last_name"] == "Doe"
     assert "id" in data
     assert "created_at" in data
 
@@ -89,11 +91,25 @@ def test_register_invalid_email_fails(client):
     assert response.status_code == 422
 
 
-def test_register_invalid_username_fails(client):
-    """Verify registration fails when username contains invalid characters."""
+def test_register_invalid_name_fails(client):
+    """Verify registration fails when name contains invalid characters."""
     response = create_user(
         client=client,
-        username="john doe",
+        name="john1",
+        last_name="doe",
+        email="john_doe@example.com",
+        password="Mypassword1234567",
+    )
+
+    assert response.status_code == 422
+
+
+def test_register_invalid_last_name_fails(client):
+    """Verify registration fails when last name coiants invalid characters."""
+    response = create_user(
+        client=client,
+        name="john",
+        last_name="doe1",
         email="john_doe@example.com",
         password="Mypassword1234567",
     )

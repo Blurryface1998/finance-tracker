@@ -1,17 +1,19 @@
-import re
-
 MIN_PASSWORD_LENGTH = 16
 MAX_PASSWORD_LENGTH = 128
 
 
-def validate_username(value: str) -> str:
-    value = value.strip().lower()
+def validate_name(value: str, max_length: int) -> str:
 
-    if len(value) < 3 or len(value) > 50:
-        raise ValueError("Username must be between 3 and 50")
+    value = " ".join(value.split())
 
-    if not re.match(r"^[a-z0-9_]+$", value):
-        raise ValueError("Username can only contain letters, numbers, and underscores")
+    if len(value) < 1 or len(value) > max_length:
+        raise ValueError(f"Name must be between 1 and {max_length}")
+
+    if not all((char.isalpha() or char in " -'") for char in value):
+        raise ValueError(
+            "Name can only contain letters, spaces, hyphens, and apostrophes"
+        )
+
     return value
 
 

@@ -1,6 +1,6 @@
 """SQLAlchemy model definitions for financial transactions."""
 
-from datetime import UTC, datetime
+from datetime import datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
@@ -9,13 +9,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 from app.core.enums import TransactionType
+from app.models.utils import utc_now
 
 if TYPE_CHECKING:
     from app.models import User
-
-
-def utc_now():
-    return datetime.now(UTC)
 
 
 class Transaction(Base):
@@ -32,7 +29,7 @@ class Transaction(Base):
     transaction_type: Mapped[TransactionType] = mapped_column(
         Enum(TransactionType), index=True
     )
-    user_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey("users.id"), nullable=True
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     user: Mapped["User"] = relationship(back_populates="transactions")
