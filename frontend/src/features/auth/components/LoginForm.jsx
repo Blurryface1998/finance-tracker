@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { Form, Link } from "react-router-dom";
+import { data, Form, Link } from "react-router-dom";
 import Container from "../../../shared/components/Container/Container";
 import ButtonLink from "../../../shared/components/ButtonLink/ButtonLink";
 import Eye from "../../../assets/eye.svg";
 import FormField from "./FormField/FormField";
 import "./LoginForm.scss";
+import { loginUser } from "../services/authService";
+import { onSubmit } from "../hooks/useAuth";
 function LoginForm() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-
+  const handleSubmit = (data) => {
+    onSubmit(data, loginUser);
+  };
   return (
-    <form className="form">
+    <form className="form" onSubmit={handleSubmit}>
       <div className="form__content">
         <div className="form__inputs">
           <FormField

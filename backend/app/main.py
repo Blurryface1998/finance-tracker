@@ -1,6 +1,7 @@
 """Create and configure the FastAPI application for the finance tracker backend."""
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.analytics.routes import router as analytics_router
 from app.auth.routes import router as authentication_router
@@ -10,6 +11,14 @@ from app.core.logging import logger
 from app.transactions.routes import router as transaction_router
 
 app = FastAPI(title="Finance Tracker API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 logger.info("Initializing Finance Tracker API")
 app.add_exception_handler(AppException, app_exception_handler)
 

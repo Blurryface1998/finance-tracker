@@ -14,12 +14,12 @@ class UserCreate(BaseModel):
     @field_validator("name", mode="before")
     @classmethod
     def name_validator(cls, value: str) -> str:
-        return utils.validate_name(value, max_length=50)
+        return utils.validate_name(value, max_length=50, field_name="Name")
 
     @field_validator("last_name", mode="before")
     @classmethod
     def last_name_validator(cls, value: str) -> str:
-        return utils.validate_name(value, max_length=100)
+        return utils.validate_name(value, max_length=100, field_name="Last name")
 
     @field_validator("email", mode="before")
     @classmethod

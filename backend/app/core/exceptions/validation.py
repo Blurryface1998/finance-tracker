@@ -61,5 +61,5 @@ class InvalidMonthError(AppException):
         super().__init__(
             message=f"Month '{month}' is outside the supported range (01-12)",
             status_code=422,
-            error_code="invalid_year",
+            error_code="invalid_month",
         )

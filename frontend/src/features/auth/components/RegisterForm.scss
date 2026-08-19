@@ -16,16 +16,6 @@
   }
 
   &__password {
-    .show-password {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: none;
-      padding: 0;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-    }
     input {
       padding-inline-end: 3rem;
     }

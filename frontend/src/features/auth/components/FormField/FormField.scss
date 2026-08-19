@@ -16,6 +16,17 @@
 
   &__input-row {
     position: relative;
+
+    .show-password {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
   }
 
   &__input {
@@ -35,5 +46,32 @@
   &__input:focus {
     border-color: var(--gray-color-02);
     outline: none;
+  }
+
+  &__error {
+    color: var(--red-color);
+    font-size: 0.875rem;
+
+    @media screen and (min-width: 1042px) {
+      font-size: 1rem;
+    }
+  }
+
+  &__requirements {
+  }
+  &__requirement {
+    margin-block-end: 6px;
+    &--valid {
+      .icons {
+        color: var(--primary-color);
+      }
+    }
+
+    .icons {
+      margin-right: 5px;
+    }
+    .text {
+      color: var(--gray-color-01);
+    }
   }
 }
