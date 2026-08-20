@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 
 from app.auth import schemas, services
@@ -22,14 +22,20 @@ def register_user_route(
 
 
 @router.post(
-    "/login", status_code=status.HTTP_200_OK, response_model=schemas.TokenResponse
+    "/login", status_code=status.HTTP_200_OK, response_model=schemas.LoginResponse
 )
 def login_user_route(
-    data: schemas.LoginRequest, db: Session = Depends(get_db)
-) -> schemas.TokenResponse:
+    data: schemas.LoginRequest, response: Response, db: Session = Depends(get_db)
+) -> schemas.LoginResponse:
     user = services.authenticate_user(db=db, login_data=data)
     access_token = create_access_token({"sub": str(user.id)})
-    return schemas.TokenResponse(
-        access_token=access_token,
-        token_type="bearer",
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+    )
+    return schemas.LoginResponse(
+        message="Login successful",
     )

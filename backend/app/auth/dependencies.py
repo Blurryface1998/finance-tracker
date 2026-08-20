@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Cookie
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
@@ -7,13 +7,14 @@ from app.core.exceptions import InvalidCredentialsError
 from app.core.security import decode_access_token
 from app.models.user import User
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+    access_token: str | None = Cookie(default=None), db: Session = Depends(get_db)
 ) -> User:
-    payload = decode_access_token(token)
+    if access_token is None:
+        raise InvalidCredentialsError()
+
+    payload = decode_access_token(access_token)
 
     user_id = payload.get("sub")
     if user_id is None:

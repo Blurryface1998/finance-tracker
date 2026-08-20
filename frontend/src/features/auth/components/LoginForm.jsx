@@ -6,13 +6,50 @@ import Eye from "../../../assets/eye.svg";
 import FormField from "./FormField/FormField";
 import "./LoginForm.scss";
 import { loginUser } from "../services/authService";
-import { onSubmit } from "../hooks/useAuth";
+import { useForm, set } from "react-hook-form";
+import { formatServerError } from "../../../shared/utils/errorMessages";
+import api from "../../../services/api/axios";
+
 function LoginForm() {
-  const handleSubmit = (data) => {
-    onSubmit(data, loginUser);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await loginUser(data);
+
+      alert("Login Scessful!");
+    } catch (err) {
+      const errorData = err.response?.data;
+
+      if (!errorData) {
+        console.error("Network or unexpected error:", err);
+        return;
+      }
+      if (Array.isArray(errorData.detail)) {
+        errorData.detail.forEach((error) => {
+          const fieldName = error.loc[error.loc.length - 1];
+
+          setError(fieldName, {
+            type: "server",
+            message: formatServerError(error.msg, fieldName, data),
+          });
+        });
+      }
+      if (errorData.error?.code === "invalid_credentials") {
+        setError("root.server", {
+          type: "server",
+          message: errorData.error.message,
+        });
+      }
+    }
   };
   return (
-    <form className="form" onSubmit={handleSubmit}>
+    <form className="form" onSubmit={handleSubmit(onSubmit)} noValidate>
       <div className="form__content">
         <div className="form__inputs">
           <FormField
@@ -20,11 +57,9 @@ function LoginForm() {
             name="email"
             type="email"
             placeholder="email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
             required
+            {...register("email")}
+            errorMessage={errors.email}
           />
 
           <FormField
@@ -34,31 +69,32 @@ function LoginForm() {
             placeholder="******"
             required
             className="form__password"
-            value={formData}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
+            {...register("password")}
+            errorMessage={errors.password}
             labelAction={
               <Link className="forgot-password" to="#">
                 Forgot password?
               </Link>
             }
-            eyeElement={
-              <button className="show-password" type="button">
-                <img src={Eye} className="eye" />
-              </button>
-            }
+            showPasswordToggle
           />
         </div>
         <div className="form__action">
-          <div>
+          <div className="error-message">
+            {errors.root?.server && (
+              <p className="form__error">{errors.root.server.message}</p>
+            )}
+          </div>
+          <div className="remeber-checkbox">
             <label className="user-remember" htmlFor="remember">
               Keep me signed in
               <input type="checkbox" id="remember" />
               <span className="checkmark"></span>
             </label>
           </div>
-          <ButtonLink classname="login-button">Login</ButtonLink>
+          <ButtonLink type="submit" classname="login-button">
+            Login
+          </ButtonLink>
         </div>
       </div>
     </form>

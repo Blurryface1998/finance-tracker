@@ -22,6 +22,12 @@ function RegisterForm() {
     minLength: password.length >= 16,
     maxLength: password.length <= 128,
   };
+
+  const confirmPassword = watch("confirm_password", "");
+  const confirmPasswordRequirements = {
+    matches: confirmPassword === password,
+  };
+
   const name = watch("name", "");
   const nameRequirements = {
     minLength: name.length >= 1,
@@ -36,9 +42,9 @@ function RegisterForm() {
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const onSubmit = async (data) => {
-    console.log("DATA being sent:", data);
+    const { confirm_password, ...userData } = data;
     try {
-      await registerUser(data);
+      await registerUser(userData);
 
       alert("Register Sucessful!");
     } catch (err) {
@@ -146,19 +152,25 @@ function RegisterForm() {
             ]}
           />
 
-          {/*<FormField
+          <FormField
             label="Confirm Password"
-            name="confirm-passowrd"
+            name="confirm_passowrd"
             type="password"
             placeholder="*******"
-            required
             className="register__password"
-            eyeElement={
-              <button className="show-password">
-                <img src={Eye} alt="" />
-              </button>
-            }
-          />*/}
+            showPasswordToggle
+            {...register("confirm_password", {
+              required: "Please confirm your password",
+              validate: (value) =>
+                value === password || "Passwords do not match",
+            })}
+            fieldRequirements={[
+              {
+                text: "Passwords must match",
+                valid: confirmPasswordRequirements.matches,
+              },
+            ]}
+          />
         </div>
 
         <div className="register__submit">
