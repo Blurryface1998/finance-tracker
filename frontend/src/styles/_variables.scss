@@ -12,21 +12,22 @@
   --gray-color-05: #e8e8e8;
   --gray-color-06: #f3f3f3;
 
-  --background-color-3: hsl(0, 0, 100, 8%);
-  --background-color-2: hsl(0, 0, 100, 70%);
-  --backgroun-color-1: hsl(0, 0, 82, 25%);
+  --background-color-3: hsla(0, 0%, 100%, 0.08);
+  --background-color-2: hsla(0, 0%, 100%, 0.7);
+  --background-color-1: hsla(0, 0%, 82%, 0.25);
   --main-background-color: #f4f5f7;
   --main-secondary-color: #e6ebff;
   --red-color: #e73d1c;
   --green-color: #4daf6e;
   --primary-color-hover: #258e83;
 
-  --shadow-01: 0px 20px 25px hsl(174, 15, 35, 10%);
-  --shadow-02: 0px 12px 16px hsl(174, 15, 35, 15%);
-  --sha: -1049px -732px 358px hsl(180, 20, 1, 0%) -671px -469px 327px
-    hsl(180, 20, 1, 1%) -377px -264px 276px hsl(180, 20, 1, 5%) -168px -117px
-    205px hsl(180, 20, 1, 9%) -42px -29px 113px hsl(180, 20, 1, 10%) 0px 0px 0px
-    hsl(180, 20, 1, 10%);
+  --shadow-01: 0px 20px 25px hsla(173, 15%, 35%, 0.1);
+  --shadow-02: 0px 12px 16px hsla(173, 15%, 35%, 0.15);
+  --sha: -1049px -732px 358px hsla(180, 20%, 1%, 0) -671px -469px 327px
+    hsla(180, 20%, 1%, 0.01) -377px -264px 276px
+    hsla(180, 20%, 1%, 0.05) -168px -117px 205px
+    hsla(180, 20%, 1%, 0.09) -42px -29px 113px hsla(180, 20%, 1%, 0.1) 0px 0px
+    0px hsla(180, 20%, 1%, 0.1);
 
   --text-color: #191919;
   --text-color-secondary: #525256;

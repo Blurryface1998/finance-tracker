@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import Container from "../Container/Container";
 import "./Header.scss";
 import ButtonLink from "../ButtonLink/ButtonLink";
 import logo from "../../../assets/logo.png";
 function Header({ logoLink = "/", links = [] }) {
   return (
-    <header className="header">
+    <header className={"header"}>
       <div className="header__content">
         <Link className="header__logo" to={logoLink}>
           <img

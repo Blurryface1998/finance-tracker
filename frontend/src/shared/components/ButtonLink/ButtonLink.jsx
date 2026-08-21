@@ -7,6 +7,7 @@ function ButtonLink({
   variant = "header",
   classname = "",
   type = "button",
+  disabled,
   ...props
 }) {
   const buttonClassName = `btn-link btn-link--${variant} ${classname}`;
@@ -18,7 +19,12 @@ function ButtonLink({
     );
   }
   return (
-    <button className={buttonClassName} type={type} {...props}>
+    <button
+      className={buttonClassName}
+      type={type}
+      disabled={disabled}
+      {...props}
+    >
       {children}
     </button>
   );

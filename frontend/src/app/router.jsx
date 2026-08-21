@@ -4,9 +4,10 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import LandingPage from "../features/landing/LandingPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
 import LoginPage from "../features/auth/pages/LoginPage";
+import VerifyEmailPage from "../features/auth/pages/VerifyEmailPage";
 import TransactionsPage from "../features/transactions/pages/TransactionsPage";
 import AnalyticsPage from "../features/analytics/pages/AnalyticsPage";
-import DashboardPage from "../features/dashboard/DashboardPage";
+import OverviewPage from "../features/overview/pages/OverviewPage";
 import ProfilePage from "../features/profile/ProfilePage";
 
 function Router() {
@@ -17,12 +18,13 @@ function Router() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
         </Route>
 
         <Route element={<DashboardLayout />}>
           <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/overview" element={<OverviewPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Routes>

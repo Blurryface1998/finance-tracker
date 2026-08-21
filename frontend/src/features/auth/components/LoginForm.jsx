@@ -1,46 +1,44 @@
+import { data, Form, Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { data, Form, Link } from "react-router-dom";
+import { useForm, set } from "react-hook-form";
+import api from "../../../services/api/axios";
 import Container from "../../../shared/components/Container/Container";
 import ButtonLink from "../../../shared/components/ButtonLink/ButtonLink";
 import Eye from "../../../assets/eye.svg";
 import FormField from "./FormField/FormField";
-import "./LoginForm.scss";
 import { loginUser } from "../services/authService";
-import { useForm, set } from "react-hook-form";
-import { formatServerError } from "../../../shared/utils/errorMessages";
-import api from "../../../services/api/axios";
+import { handleFormError } from "../../../shared/utils/errorMessages";
+import { submitWithLoading } from "../../../shared/utils/formSubmit";
+import Loader from "../../../shared/components/Loader/Loader";
+import { minimumLoadingTime } from "../../../shared/utils/loading";
+import "./LoginForm.scss";
 
 function LoginForm() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     setError,
+    clearErrors,
     formState: { errors },
   } = useForm();
 
   const onSubmit = async (data) => {
     try {
-      const response = await loginUser(data);
+      const response = await submitWithLoading({
+        request: () => loginUser(data),
+        setLoading: setIsLoading,
+        clearErrors,
+      });
 
-      alert("Login Scessful!");
+      navigate("/dashboard");
     } catch (err) {
-      const errorData = err.response?.data;
+      const errorData = handleFormError(err, setError, data);
 
-      if (!errorData) {
-        console.error("Network or unexpected error:", err);
-        return;
-      }
-      if (Array.isArray(errorData.detail)) {
-        errorData.detail.forEach((error) => {
-          const fieldName = error.loc[error.loc.length - 1];
-
-          setError(fieldName, {
-            type: "server",
-            message: formatServerError(error.msg, fieldName, data),
-          });
-        });
-      }
-      if (errorData.error?.code === "invalid_credentials") {
+      if (errorData?.error?.code === "invalid_credentials") {
         setError("root.server", {
           type: "server",
           message: errorData.error.message,
@@ -49,55 +47,58 @@ function LoginForm() {
     }
   };
   return (
-    <form className="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="form__content">
-        <div className="form__inputs">
-          <FormField
-            label="Email Address"
-            name="email"
-            type="email"
-            placeholder="email"
-            required
-            {...register("email")}
-            errorMessage={errors.email}
-          />
+    <>
+      {isLoading && <Loader />}
+      <form className="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <div className="form__content">
+          <div className="form__inputs">
+            <FormField
+              label="Email Address"
+              name="email"
+              type="email"
+              placeholder="email"
+              required
+              {...register("email")}
+              errorMessage={errors.email}
+            />
 
-          <FormField
-            label="Password"
-            name="password"
-            type="password"
-            placeholder="******"
-            required
-            className="form__password"
-            {...register("password")}
-            errorMessage={errors.password}
-            labelAction={
-              <Link className="forgot-password" to="#">
-                Forgot password?
-              </Link>
-            }
-            showPasswordToggle
-          />
-        </div>
-        <div className="form__action">
-          <div className="error-message">
-            {errors.root?.server && (
-              <p className="form__error">{errors.root.server.message}</p>
-            )}
+            <FormField
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="******"
+              required
+              className="form__password"
+              {...register("password")}
+              errorMessage={errors.password}
+              labelAction={
+                <Link className="forgot-password" to="#">
+                  Forgot password?
+                </Link>
+              }
+              showPasswordToggle
+            />
           </div>
-          <div className="remeber-checkbox">
-            <label className="user-remember" htmlFor="remember">
-              Keep me signed in
-              <input type="checkbox" id="remember" />
-              <span className="checkmark"></span>
-            </label>
+          <div className="form__action">
+            <div className="error-message">
+              {errors.root?.server && (
+                <p className="form__error">{errors.root.server.message}</p>
+              )}
+            </div>
+            <div className="remeber-checkbox">
+              <label className="user-remember" htmlFor="remember">
+                Keep me signed in
+                <input type="checkbox" id="remember" />
+                <span className="checkmark"></span>
+              </label>
+            </div>
+            <ButtonLink type="submit" classname="login-button">
+              Login
+            </ButtonLink>
           </div>
-          <ButtonLink type="submit" classname="login-button">
-            Login
-          </ButtonLink>
         </div>
-      </div>
-    </form>
+      </form>
+    </>
   );
 }
 
