@@ -18,12 +18,17 @@ a {
 
 button,
 select,
+input,
 textarea {
   appearance: none;
   -webkit-appearance: none;
   background: transparent;
   border: none;
   font: inherit;
+}
+
+input:focus {
+  outline: none;
 }
 
 img,

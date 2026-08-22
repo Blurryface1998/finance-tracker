@@ -1,0 +1,123 @@
+.overview-header {
+  /*display: flex;
+  justify-content: space-between;
+  align-items: center;*/
+  padding: 1rem;
+  background-color: var(--main-background-color);
+  width: 100%;
+  min-height: 80px;
+
+  &__user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /*gap: 24px;*/
+  }
+  &__user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__user-name {
+    font-size: 1.375rem;
+  }
+
+  &__date {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.875rem;
+    color: var(--gray-color-03);
+  }
+  &__notification {
+    &--button {
+      @media screen and (min-width: 1024px) {
+        display: none;
+      }
+    }
+  }
+
+  &__mobile-actions {
+    margin-block-start: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media screen and (min-width: 1024px) {
+    }
+  }
+
+  &__desktop-actions {
+    display: none;
+  }
+
+  &__notification-button {
+    cursor: pointer;
+  }
+  &__search {
+    display: none;
+  }
+
+  &__search-input {
+    width: 100%;
+    height: 48px;
+    padding: 12px 24px 12px 32px;
+    background-color: var(--white-color);
+    border-radius: 12px;
+    border: none;
+    box-shadow: var(--drop-shadow);
+    font-size: 1rem;
+
+    ::placeholder {
+      color: var(--gray-color-03);
+    }
+  }
+
+  &__search-icon {
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .overview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px 20px 24px;
+
+    &__user-info {
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+    }
+
+    &__user-name {
+      font-size: 1.5rem;
+    }
+
+    &__mobile-actions {
+      display: none;
+    }
+
+    &__desktop-actions {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 40px;
+    }
+
+    &__search {
+      position: relative;
+      display: block;
+    }
+    &__search-input {
+      width: 352px;
+    }
+
+    &__search-icon {
+      position: absolute;
+      top: 12px;
+      right: 24px;
+    }
+  }
+}
