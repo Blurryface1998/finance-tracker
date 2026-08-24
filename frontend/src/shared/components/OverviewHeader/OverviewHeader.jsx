@@ -5,7 +5,7 @@ import Search from "../../../assets/Search.svg";
 import HamburgerMenu from "../../../assets/hamburger-menu.svg";
 import "./OverviewHeader.scss";
 
-function OverviewHeader({ logoLink = "/overview", links = [] }) {
+function OverviewHeader({ onMenuClick }) {
   const today = new Date();
   const yyyy = today.getFullYear();
   const mm = String(today.getMonth() + 1).padStart(2, "0");
@@ -41,7 +41,7 @@ function OverviewHeader({ logoLink = "/overview", links = [] }) {
 
       <div className="overview-header__mobile-actions">
         <div className="hamburger">
-          <button type="button">
+          <button type="button" onClick={onMenuClick}>
             <img src={HamburgerMenu} alt="Hamburger Menu" />
           </button>
         </div>

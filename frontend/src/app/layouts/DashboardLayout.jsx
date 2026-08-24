@@ -1,16 +1,22 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import OverviewHeader from "../../shared/components/OverviewHeader/OverviewHeader";
 import Sidebar from "../../shared/components/Sidebar/Sidebar";
 import { personalNavigation } from "../navigation/links";
-
+import "./DashboardLayout.scss";
+import { useState } from "react";
 function DashboardLayout() {
-  const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <>
-      <OverviewHeader />
-      <Sidebar links={personalNavigation} />
-      <Outlet />
-    </>
+    <div className="dashboard-layout">
+      <Sidebar links={personalNavigation} isOpen={sidebarOpen} />
+      <div className="dashboard-layout__main">
+        <OverviewHeader onMenuClick={() => setSidebarOpen((prev) => !prev)} />
+
+        <main className="dashboard-layout__content">
+          <Outlet />
+        </main>
+      </div>
+    </div>
   );
 }
 

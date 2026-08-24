@@ -1,7 +1,4 @@
 .overview-header {
-  /*display: flex;
-  justify-content: space-between;
-  align-items: center;*/
   padding: 1rem;
   background-color: var(--main-background-color);
   width: 100%;
@@ -11,7 +8,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /*gap: 24px;*/
   }
   &__user-info {
     display: flex;

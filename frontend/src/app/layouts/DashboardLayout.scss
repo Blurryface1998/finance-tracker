@@ -1,0 +1,21 @@
+.dashboard-layout {
+  display: block;
+
+  &__main {
+    position: relative;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .dashboard-layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    &__main {
+    }
+
+    &__content {
+      padding: 24px;
+    }
+  }
+}
