@@ -17,6 +17,17 @@
   background-color: var(--default-black-color);
   padding: 48px 28px;
 
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__title {
+    font-size: 24px;
+    color: var(--white-color);
+  }
+
   &--open {
     transform: translateX(0);
   }
@@ -42,20 +53,40 @@
   }
 
   &__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
     .logout-button {
       display: flex;
       align-items: center;
       gap: 12px;
+      width: 100%;
       color: var(--white-color);
       padding: 12px 16px;
       background: var(--background-color-3);
       border-radius: 4px;
     }
   }
-
+  &__profile {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
   &__account {
     display: flex;
     align-items: center;
+    gap: 16px;
+
+    .info {
+      p {
+        color: var(--white-color);
+        font-size: 16px;
+      }
+      a {
+        color: var(--background-color-2);
+        font-size: 12px;
+      }
+    }
   }
 }
 
