@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 
-from app.auth import schemas, services
+from app.auth import schemas, services, dependencies
+from app.models import User
 from app.core.database import get_db
 from app.core.security import create_access_token
 
@@ -39,3 +40,8 @@ def login_user_route(
     return schemas.LoginResponse(
         message="Login successful",
     )
+
+
+@router.get("/me", status_code=status.HTTP_200_OK, response_model=schemas.UserResponse)
+def get_current_user_route(curret_user: User = Depends(dependencies.get_current_user)):
+    return curret_user

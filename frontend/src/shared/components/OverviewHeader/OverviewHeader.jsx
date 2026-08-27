@@ -4,6 +4,7 @@ import Notification from "../../../assets/Notification-icon.svg";
 import Search from "../../../assets/Search.svg";
 import HamburgerMenu from "../../../assets/menu/hamburger-menu.svg";
 import Close from "../../../assets/menu/x.svg";
+import { useAuth } from "../../../features/auth/hooks/useAuth";
 import "./OverviewHeader.scss";
 
 function OverviewHeader({
@@ -12,6 +13,7 @@ function OverviewHeader({
   onSearchClick,
   isSearchOpen,
 }) {
+  const { user } = useAuth();
   const today = new Date();
   const yyyy = today.getFullYear();
   const mm = String(today.getMonth() + 1).padStart(2, "0");
@@ -23,7 +25,7 @@ function OverviewHeader({
     <header className="overview-header">
       <div className="overview-header__user">
         <div className="overview-header__user-info">
-          <h1 className="overview-header__user-name">Hello Name</h1>
+          <h1 className="overview-header__user-name">Hello {user?.name}</h1>
 
           <div className="overview-header__date">
             <img

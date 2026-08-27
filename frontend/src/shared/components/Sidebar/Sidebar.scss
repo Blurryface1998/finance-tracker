@@ -80,6 +80,7 @@
     .info {
       p {
         color: var(--white-color);
+        text-transform: capitalize;
         font-size: 16px;
       }
       a {

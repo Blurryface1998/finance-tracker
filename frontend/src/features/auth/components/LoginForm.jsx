@@ -34,7 +34,7 @@ function LoginForm() {
         clearErrors,
       });
 
-      navigate("/dashboard");
+      navigate("/overview");
     } catch (err) {
       const errorData = handleFormError(err, setError, data);
 

@@ -3,8 +3,10 @@ import Logo from "../../../assets/logo.png";
 import Logout from "../../../assets/links/Logout.svg";
 import Icon from "../../../assets/Icon.svg";
 import Profile from "../../../assets/links/Profile.svg";
+import { useAuth } from "../../../features/auth/hooks/useAuth";
 import "./Sidebar.scss";
 function Sidebar({ links = [], isOpen }) {
+  const { user } = useAuth();
   return (
     <aside className={`navbar ${isOpen ? "navbar--open" : ""}`}>
       <div className="navbar__header">
@@ -35,7 +37,9 @@ function Sidebar({ links = [], isOpen }) {
           <div className="navbar__account">
             <img src={Profile} alt="" />
             <div className="info">
-              <p>Name and last name</p>
+              <p>
+                {user?.name} {user.last_name}
+              </p>
               <a href="/profile">View profile</a>
             </div>
           </div>

@@ -1,5 +1,4 @@
 from fastapi import Depends, Cookie
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
