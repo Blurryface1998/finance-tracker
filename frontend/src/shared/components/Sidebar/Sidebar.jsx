@@ -38,7 +38,7 @@ function Sidebar({ links = [], isOpen }) {
             <img src={Profile} alt="" />
             <div className="info">
               <p>
-                {user?.name} {user.last_name}
+                {user?.name} {user?.last_name}
               </p>
               <a href="/profile">View profile</a>
             </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useTransaction } from "../../transactions/hooks/useTransaction";
+import TopContent from "../components/TopContent";
 import "./OverviewPage.scss";
 
 const dummyTransactions = [
@@ -54,17 +55,7 @@ function OverviewPage() {
 
   return (
     <div>
-      <p>welcome {user?.name}</p>
-      <p>you have {transactions.length} transactions.</p>
-
-      {transactions.map((transaction) => (
-        <div key={transaction.id}>
-          <h3>{transaction.description}</h3>
-          <p>Amount: {transaction.amount}</p>
-          <p>Category: {transaction.category}</p>
-          <p>Type: {transaction.transaction_type}</p>
-        </div>
-      ))}
+      <TopContent />
     </div>
   );
 }
