@@ -2,7 +2,7 @@
 
 A full-stack personal finance application for managing transactions, tracking income and expenses, and analyzing financial activity over time.
 
-The application is built with a React frontend and a FastAPI backend, with a focus on modular architecture, secure authentication, data ownership, and a responsive user interface.
+The application uses a React frontend and a FastAPI backend, with a focus on modular architecture, secure authentication, data ownership, and responsive UI.
 
 ## Features
 
@@ -11,12 +11,12 @@ The application is built with a React frontend and a FastAPI backend, with a foc
 - Cookie-based authentication
 - Transaction creation, editing, deletion, and listing
 - Transaction filtering by type, category, and amount range
-- Cursor-based transaction pagination
+- Cursor-based pagination
 - User-owned transaction access control
 - Monthly and yearly financial summaries
 - Responsive dashboard interface
 - Reusable React components
-- Backend automated tests
+- Automated backend tests
 
 ## Tech Stack
 
@@ -44,114 +44,24 @@ The application is built with a React frontend and a FastAPI backend, with a foc
 
 ## Architecture
 
-The project is separated into two main applications:
+The application is divided into two main parts.
 
-```text
-finance-tracker/
-├── backend/
-│   ├── app/
-│   │   ├── analytics/
-│   │   ├── auth/
-│   │   ├── core/
-│   │   ├── models/
-│   │   └── transactions/
-│   ├── alembic/
-│   ├── tests/
-│   ├── requirements.txt
-│   └── README.md
-│
-├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   ├── features/
-│   │   ├── services/
-│   │   ├── shared/
-│   │   └── styles/
-│   ├── public/
-│   ├── package.json
-│   └── README.md
-│
-├── .gitignore
-└── README.md
-```
+The **FastAPI backend** provides the REST API and handles authentication, authorization, transaction management, database operations, and financial calculations.
 
-The backend exposes the API used by the React frontend. Authentication, authorization, transaction management, and financial calculations are handled by the backend, while the frontend is responsible for routing, user interaction, and presentation.
-
-## Local Setup
-
-### 1. Clone the repository
-
-```bash
-git clone <your-repo-url>
-cd finance-tracker
-```
-
-### 2. Backend
-
-```bash
-cd backend
-
-python3 -m venv .venv
-source .venv/bin/activate
-
-pip install -r requirements.txt
-```
-
-Create a `.env` file inside `backend/`:
-
-```env
-SECRET_KEY=your-secret-key
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-```
-
-Start the development server:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-The API will be available at:
-
-```text
-http://localhost:8000
-```
-
-### 3. Frontend
-
-In another terminal:
-
-```bash
-cd frontend
-
-npm install
-npm run dev
-```
-
-The frontend will be available at:
-
-```text
-http://localhost:5173
-```
+The **React frontend** handles application routing, user interaction, API integration, and presentation.
 
 ## Testing
 
-Backend tests are written with Pytest.
-
-Run the test suite from the backend directory:
-
-```bash
-pytest
-```
+The backend includes unit and integration tests covering authentication, transactions, filtering, pagination, summaries, and data ownership.
 
 ## Development
 
-The application is being developed incrementally, with the backend API and frontend interface evolving together.
+Database schema changes are managed with Alembic migrations.
 
-Database schema changes are managed with Alembic migrations, and the backend includes unit and integration tests for core functionality.
+The backend and frontend are developed together, with the frontend consuming the REST API provided by the backend.
 
 ## Learning & Development
 
-This project was developed as a hands-on learning process. **ChatGPT was used as a learning and development aid** throughout the project to help research concepts, explain unfamiliar technologies, troubleshoot implementation issues, review approaches, and explore alternative solutions.
+This project was developed as a hands-on learning process. ChatGPT was used as a learning and development aid to research concepts, explain unfamiliar technologies, troubleshoot implementation issues, review approaches, and explore alternative solutions.
 
-The implementation, project structure, decisions, and integration of the resulting code were developed as part of the project's development process.
+The implementation and technical decisions were developed throughout the project, with ChatGPT serving as a supplementary tool for learning and problem-solving.
