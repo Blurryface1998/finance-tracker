@@ -1,49 +1,113 @@
 # Finance Tracker Backend
 
-This folder contains the backend API for the finance tracker project.
+The backend API for Finance Tracker, built with FastAPI and SQLAlchemy.
 
-## Terminal commands
+## Overview
 
-### Activate the virtual environment
+The API provides authenticated endpoints for:
 
-From `finance-tracker/backend` run:
+- User registration and authentication
+- Transaction CRUD operations
+- Transaction filtering
+- Cursor-based pagination
+- Monthly and yearly financial summaries
+- User-owned data access control
 
-```bash
-source ../.venv/bin/activate
+## Tech Stack
+
+- Python
+- FastAPI
+- SQLAlchemy
+- Pydantic
+- SQLite
+- Alembic
+- JWT
+- Argon2
+- Pytest
+
+## Structure
+
+```text
+backend/
+├── app/
+│   ├── analytics/
+│   ├── auth/
+│   ├── core/
+│   ├── models/
+│   └── transactions/
+├── alembic/
+├── tests/
+├── requirements.txt
+└── pytest.ini
 ```
 
-If you prefer direct invocation, use:
+### Main Components
+
+**Auth**
+
+Handles registration, authentication, password hashing, token creation, and authenticated request dependencies.
+
+**Transactions**
+
+Provides transaction creation, retrieval, updating, deletion, filtering, pagination, and ownership enforcement.
+
+**Analytics**
+
+Provides aggregated financial data and monthly/yearly summaries.
+
+**Core**
+
+Contains application configuration, database setup, security utilities, exceptions, logging, and shared enums.
+
+**Tests**
+
+Contains unit and integration tests covering authentication, transactions, filtering, pagination, summaries, and ownership.
+
+## Local Setup
+
+From the backend directory:
 
 ```bash
-/home/djordje/Desktop/pyton_project/finance-tracker/.venv/bin/python
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install -r requirements.txt
 ```
 
-### Start the API (if you have a FastAPI runner configured)
+Create a `.env` file:
 
-Use your preferred FastAPI startup command, for example:
+```env
+SECRET_KEY=your-secret-key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+Start the development server:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-### Format code
+The API will be available at:
 
-Run `isort` to sort imports:
-
-```bash
-isort app tests
-isort .
+```text
+http://localhost:8000
 ```
 
-Run `ruff` to lint and fix issues:
+## Testing
+
+Run the test suite:
 
 ```bash
-ruff check app tests
-ruff check app tests --fix
-ruff check . --fix
+pytest
 ```
 
-### Notes
+## Database
 
-- Keep this file focused on backend runtime and tooling commands.
-- Use `backend/tests/README.md` for test-specific instructions.
+SQLite is currently used for local persistence.
+
+Database schema changes are managed with Alembic migrations.
+
+## Development
+
+The backend is developed incrementally alongside the React frontend, with automated tests used to validate core application behavior.

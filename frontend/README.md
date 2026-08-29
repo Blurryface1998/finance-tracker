@@ -1,16 +1,86 @@
-# React + Vite
+# Finance Tracker Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The React frontend for Finance Tracker.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The frontend provides:
 
-## React Compiler
+- Public landing page
+- User registration and login
+- Protected application routes
+- Dashboard layout
+- Transaction management
+- Financial analytics
+- Profile functionality
+- Responsive navigation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- React
+- Vite
+- React Router
+- Axios
+- React Hook Form
+- SCSS
+- ESLint
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Structure
+
+```text
+frontend/
+├── src/
+│   ├── app/
+│   ├── assets/
+│   ├── features/
+│   ├── services/
+│   ├── shared/
+│   └── styles/
+├── public/
+├── package.json
+├── vite.config.js
+└── eslint.config.js
+```
+
+### Main Components
+
+**App**
+
+Contains application routing, layouts, and global providers.
+
+**Features**
+
+Organizes functionality by application domain, including authentication, transactions, analytics, overview, profile, and landing pages.
+
+**Services**
+
+Contains API communication and feature-specific service functions.
+
+**Shared**
+
+Contains reusable UI components, layouts, utilities, and common application elements.
+
+**Styles**
+
+Contains global styles, variables, typography, and shared SCSS configuration.
+
+## Local Setup
+
+From the frontend directory:
+
+```bash
+npm install
+npm run dev
+```
+
+The development server will be available at:
+
+```text
+http://localhost:5173
+```
+
+## Development
+
+The frontend communicates with the FastAPI backend through Axios and uses React Router for application navigation.
+
+Reusable components and SCSS modules are used to keep the interface consistent across application sections.
