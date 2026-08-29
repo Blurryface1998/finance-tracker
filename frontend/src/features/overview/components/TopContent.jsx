@@ -1,7 +1,10 @@
 import Card from "../../../shared/components/Card/Card";
 import MasterCard from "../../../assets/credit-card-logos/Mastercard.svg";
 import ArrowUpRight from "../../../assets/button-icons/arrow-up-right.svg";
-import Arrow from "../../../assets/button-icons/Leftarrow.svg";
+import Arrow from "../../../assets/button-icons/chevron-right.svg";
+import Edit from "../../../assets/button-icons/edit.svg";
+import Award from "../../../assets/icons/Award.svg";
+import Goal from "../../../assets/icons/octicon-goal.svg";
 import "./TopContent.scss";
 function TopContent() {
   return (
@@ -9,73 +12,104 @@ function TopContent() {
       <div className="container__article">
         <h1 className="container__title">Total Balance</h1>
         <Card className="container__card">
-          <div className="container__header">
-            <h2 className="container__balance">$240,399</h2>{" "}
-            {/* Total balance */}
-            <p type="button" className="container__accounts">
-              All Accounts
-            </p>
-          </div>
-          <div className="container__credit-card">
-            {/* Moving credit cards */}
-            <div className="container__account-type">
-              <span className="container__card-type">Account Type</span>
-              <h3>Credit Card</h3>
-              <p>**** **** **** 2598</p>
+          <div className="container__card--details">
+            <div className="container__card--details--header">
+              <h2>$240,399</h2> {/* Total balance */}
+              <p>All Accounts</p>
             </div>
-            <div className="container__logo-amount">
-              <img src={MasterCard} alt="master card icon" />
-              <div className="container__amount-button">
-                <p>25000$</p> {/* Balacne on the credit card */}
-                <button type="button">
-                  <img src={ArrowUpRight} alt="arrow icon" />
-                </button>
+
+            <div className="container__card--details--account-type">
+              <div className="content">
+                <span className="container__card-type">Account Type</span>
+
+                <h3>Credit Card</h3>
+
+                <p>**** **** **** 2598</p>
+              </div>
+
+              <div className="logo">
+                <img src={MasterCard} alt="master card icon" />
+
+                <div className="logo__amount-button">
+                  <p>25000$</p> {/* Balacne on the credit card */}
+                  <button type="button">
+                    <img src={ArrowUpRight} alt="arrow icon" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-          <div className="container__pagination">
-            <button type="button">
-              <img src={Arrow} alt="icon for left" />
-              Previous
-            </button>
-            <div className="container__slider">
+
+          <div className="container__card--slider-options">
+            <div className="previous">
+              <img src={Arrow} alt="icon for left" className="arrow-right" />
+
+              <button type="button" disabled>
+                Previous
+              </button>
+            </div>
+
+            <div className="slider">
+              <button className="dot active"></button>
+
               <button className="dot"></button>
-              <button className="dot"></button>
+
               <button className="dot"></button>
             </div>
-            <button type="button">
-              Next{" "}
-              <img src={Arrow} alt="icon for right" className="arrow-right" />
-            </button>
+
+            <div className="next">
+              <button type="button">Next</button>
+
+              <img src={Arrow} alt="icon for right" />
+            </div>
           </div>
         </Card>
       </div>
+
       <div className="container__article">
         <h1 className="container__title">Goals</h1>
         <Card className="container__card">
-          <div className="conainter__header">
-            <h2 className="container__goal">$20,000</h2> {/* Balance of goal */}
-            <button type="button" className="container__change-goal">
-              <img src="" alt="change goal icon" />
-            </button>
+          <div className="container__card--goals-header">
+            <div className="goals-header">
+              <h2>$20,000</h2> {/* Balance of goal */}
+              <button type="button" className="container__change-goal">
+                <img src={Edit} alt="change goal icon" />
+              </button>
+            </div>
+
             <span>may, 2023</span>
           </div>
-          <div className="conatianer__main">
-            <div className="container__target">
-              <div>
-                <img src="" alt="medal icon" />
-                <span>Target Achived</span>
+
+          <div className="container__card--goals-details">
+            <div className="left">
+              <div className="left__target">
+                <img src={Award} alt="Award icon" />
+                <div>
+                  <span>Target Achived</span>
+                  <p>$12,500</p> {/* see wjhere it comes from */}
+                </div>
               </div>
-              <p>$12,500</p> {/* see wjhere it comes from */}
-            </div>
-            <div className="container__target">
-              <div>
-                <img src="" alt="target icon" />
-                <span>This month Target</span>
+
+              <div className="left__target">
+                <img src={Goal} alt="Goal icon" />
+                <div>
+                  <span>This month Target</span>
+                  <p>$20,000</p> {/* see where it comes from */}
+                </div>
               </div>
-              <p>$20,000</p> {/* see where it comes from */}
             </div>
-            <div className="container__fuel">Testing</div>
+
+            <div className="right">
+              <div className="graph">
+                <div></div>
+                <div className="graph__target-range">
+                  <span className="start">$0</span>
+                  <span className="middle">12K</span>
+                  <span className="end">$20K</span>
+                </div>
+              </div>
+              <p>Target vs Achievement</p>
+            </div>
           </div>
         </Card>
       </div>

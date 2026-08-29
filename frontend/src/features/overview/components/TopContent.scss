@@ -1,7 +1,6 @@
 .container {
   display: flex;
-
-  align-items: center;
+  align-items: baseline;
   gap: 24px;
 
   &__article {
@@ -18,107 +17,224 @@
   }
 
   &__card {
-  }
-
-  &__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding-block-end: 20px;
-  }
-  &__balance {
-    font-size: 22px;
-  }
-
-  &__accounts {
-    color: var(--secondary-color);
-    font-size: 14px;
-  }
-
-  &__credit-card {
-    display: flex;
-    align-items: stretch;
-    justify-content: space-between;
-    width: 304px;
-    padding: 16px;
-    background-color: var(--primary-color);
-    border-radius: 4px;
-  }
-  &__account-type {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    span,
-    p {
-      color: var(--background-color-2);
-      font-size: 14px;
-    }
-    h3 {
-      color: var(--white-color);
-      font-size: 16px;
-      font-weight: bold;
-    }
-  }
-  &__logo-amount {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    img {
-      align-self: flex-end;
-      width: 48px;
-      height: 28px;
-    }
-  }
-  &__amount-button {
-    display: flex;
     align-items: center;
-    gap: 12px;
-    color: var(--white-color);
-    p {
-      font-size: 16px;
-      font-weight: bold;
-    }
-    button {
-      padding: 4px;
-      background-color: var(--white-color);
-      border-radius: 20px;
+    gap: 20px;
 
-      img {
-        width: 24px;
-        height: 24px;
+    &--details {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      &--header {
+        width: 304px;
         display: flex;
-        filter: var(--primary-color);
         align-items: center;
+        justify-content: space-between;
+        padding-block-end: 12px;
+        border-bottom: 1px solid var(--gray-color-06);
+
+        h2 {
+          font-size: 22px;
+        }
+        p {
+          color: var(--secondary-color);
+          font-size: 14px;
+        }
+      }
+
+      &--account-type {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        width: 304px;
+        padding: 16px;
+        background-color: var(--primary-color);
+        border-radius: 4px;
+
+        .content {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+          span,
+          p {
+            color: var(--background-color-2);
+            font-size: 14px;
+          }
+          h3 {
+            color: var(--white-color);
+            font-size: 16px;
+            font-weight: bold;
+          }
+        }
+
+        .logo {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+
+          img {
+            align-self: flex-end;
+            width: 48px;
+            height: 28px;
+          }
+
+          &__amount-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--white-color);
+            p {
+              font-size: 16px;
+              font-weight: bold;
+            }
+            button {
+              padding: 4px;
+              background-color: var(--white-color);
+              border-radius: 20px;
+
+              img {
+                width: 24px;
+                height: 24px;
+                display: flex;
+                filter: var(--primary-color);
+                align-items: center;
+              }
+            }
+          }
+        }
       }
     }
-  }
-  &__pagination {
-    margin-block-start: 20px;
-    width: 304px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 
-    button {
+    &--slider-options {
+      margin-block-start: 20px;
+      width: 304px;
       display: flex;
       align-items: center;
-      gap: 4px;
-      color: var(--gray-color-04);
+      justify-content: space-between;
+
+      .previous {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 14px;
+        font-weight: 600;
+        /*color: var(--gray-color-04);*/ /* when now more pages left */
+
+        .arrow-right {
+          transform: rotate(180deg);
+        }
+      }
+
+      .slider {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        .active {
+          background-color: var(--primary-color);
+        }
+        button {
+          width: 8px;
+          height: 8px;
+          background-color: var(--gray-color-04);
+          border-radius: 20px;
+        }
+      }
+
+      .next {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
     }
-    .arrow-right {
-      transform: rotate(180deg);
+
+    &--goals-header {
+      width: 302px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-block-end: 12px;
+      border-bottom: 1px solid var(--gray-color-06);
+      .goals-header {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+
+        button {
+          padding: 8px;
+          background-color: var(--background-color-1);
+        }
+      }
     }
-  }
-  &__slider {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    button {
-      width: 8px;
-      height: 8px;
-      background-color: var(--primary-color);
-      border-radius: 20px;
+
+    &--goals-details {
+      align-self: baseline;
+      height: 128px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .left {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        &__target {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          img {
+            align-self: baseline;
+          }
+          div {
+            display: flex;
+            flex-direction: column;
+            align-items: baseline;
+            gap: 4px;
+
+            span {
+              font-size: 12px;
+              color: var(--gray-color-02);
+            }
+            p {
+              font-size: 16px;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+
+      .right {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+
+        .graph {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          &__target-range {
+            width: 144px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .start,
+            .end {
+              font-size: 12px;
+              color: var(--gray-color-04);
+            }
+            .middle {
+              font-size: 16px;
+              font-weight: 600;
+            }
+          }
+        }
+        p {
+          font-size: 12px;
+        }
+      }
     }
   }
 }
