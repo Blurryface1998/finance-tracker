@@ -1,0 +1,41 @@
+.goal-gauge {
+  width: 100%;
+  max-width: 128px;
+  height: 68px;
+
+  &__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  &__track {
+    fill: var(--gray-color-05);
+  }
+
+  &__progress {
+    fill: var(--primary-color);
+  }
+
+  &__needle {
+    fill: var(--primary-color);
+    transition: transform 0.5s ease;
+  }
+
+  &__pivot {
+    fill: var(--primary-color);
+  }
+
+  &__range {
+    align-self: stretch;
+    width: 144px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p {
+      color: var(--gray-color-04);
+    }
+  }
+}

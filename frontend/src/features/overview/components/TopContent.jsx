@@ -6,6 +6,8 @@ import Edit from "../../../assets/button-icons/edit.svg";
 import Award from "../../../assets/icons/Award.svg";
 import Goal from "../../../assets/icons/octicon-goal.svg";
 import "./TopContent.scss";
+import GoalGauge from "../../../shared/components/GoalGauge/GoalGauge";
+
 function TopContent() {
   return (
     <div className="container">
@@ -101,51 +103,56 @@ function TopContent() {
 
             <div className="right">
               <div className="graph">
-                <div></div>
-                <div className="graph__target-range">
-                  <span className="start">$0</span>
-                  <span className="middle">12K</span>
-                  <span className="end">$20K</span>
-                </div>
+                <GoalGauge current={1000} goal={5000} />
               </div>
               <p>Target vs Achievement</p>
             </div>
           </div>
         </Card>
       </div>
+
       <div className="container__article">
         <div className="container__upper">
           <h1 className="container__title">Upcoming Bill</h1>
           <button type="button">
-            View All <img src="" alt="right arow icon" />
+            View All <img src={Arrow} alt="right arow icon" />
           </button>
         </div>
         <Card className="contiainer__card">
-          <div className="continaer__bill">
-            <div className="contianer__date">
-              <p>May</p>
-              <p>15</p>
-            </div>
-            <div className="container__description">
-              <h2>Figma</h2>
-              <h3>Figma - Monthly</h3>
-              <span>Last Charge - 14 may, 2022</span>
+          <div className="container__bill">
+            <div className="details">
+              <div className="date">
+                <p className="month">May</p>
+                <p className="day">15</p>
+              </div>
+              <div className="description">
+                <h2>Figma</h2>
+                <div className="subscription-name">
+                  <h3>Figma - Monthly</h3>
+                  <span>Last Charge - 14 may, 2022</span>
+                </div>
+              </div>
             </div>
             <div className="container__amount">
               <p>$150</p>
             </div>
           </div>
           <div className="container__bill">
-            <div className="container__date">
-              <p>May</p>
-              <p>15</p>
+            <div className="details">
+              <div className="date">
+                <p className="month">Jun</p>
+                <p className="day">16</p>
+              </div>
+
+              <div className="description">
+                <h2>Adobe</h2>
+                <div className="subscription-name">
+                  <h3>Adobe - Yearly</h3>
+                  <span>Last Charge - 17, jun, 2023</span>
+                </div>
+              </div>
             </div>
-            <div className="container__description">
-              <h2>Adobe</h2>
-              <h3>Adobe - Yearly</h3>
-              <span>Last Charge - 17, jun, 2023</span>
-            </div>
-            <div className="contianer__amount">
+            <div className="container__amount">
               <p>$559</p>
             </div>
           </div>

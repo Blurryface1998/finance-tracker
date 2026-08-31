@@ -11,7 +11,8 @@
 
   &__title {
     font-size: 22px;
-    font-weight: 500;
+    font-weight: 400;
+    line-height: 1.4545454545454546;
     color: var(--gray-color-02);
     text-align: start;
   }
@@ -205,10 +206,14 @@
       }
 
       .right {
+        align-self: stretch;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         align-items: center;
-        gap: 6px;
+        align-content: center;
+        justify-items: start;
+        justify-content: start;
+        row-gap: 14px;
 
         .graph {
           display: flex;
@@ -235,6 +240,106 @@
           font-size: 12px;
         }
       }
+    }
+  }
+  &__upper {
+    display: flex;
+
+    align-items: center;
+    justify-content: start;
+    gap: 128px;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-color-02);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.3333333333333333;
+    }
+  }
+  &__bill {
+    width: 304px;
+    display: flex;
+    align-items: center;
+    justify-items: stretch;
+    justify-content: space-between;
+    padding-block: 20px 4px;
+    .details {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .date {
+      border-radius: 8px;
+      background-color: var(--background-color-1);
+      border: 1px solid;
+      border-color: #9a989800;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 8px;
+
+      .month {
+        color: var(--gray-color-01);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.3333333333333333;
+      }
+      .day {
+        font-size: 22px;
+        font-weight: 800;
+        line-height: 1.4545454545454546;
+        text-transform: capitalize;
+      }
+    }
+    .description {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: 4px;
+      h2 {
+      }
+      .subscription-name {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 2px;
+        h3 {
+          color: var(--secondary-color);
+          font-size: 16px;
+          font-weight: 700;
+          line-height: 1.5;
+          text-transform: capitalize;
+        }
+        span {
+          color: var(--gray-color-03);
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 1.3333333333333333;
+        }
+      }
+    }
+  }
+  &__amount {
+    border-radius: 8px;
+    background-color: var(--white-color);
+    border: 1px solid;
+    border-color: #e8e8e8ff;
+    display: flex;
+    align-items: start;
+    gap: 8px;
+    padding: 8px 12px;
+
+    p {
+      color: var(--secondary-color);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.5;
+      text-transform: capitalize;
     }
   }
 }
