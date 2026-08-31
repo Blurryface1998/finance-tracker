@@ -1,16 +1,17 @@
+@use "../../../styles/utilities" as *;
+@use "../../../styles/typography" as *;
+
 .register {
   width: 100%;
   max-width: 400px;
 
   &__content {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     gap: 32px;
   }
 
   &__inputs {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     align-items: stretch;
     gap: 1.5rem;
   }
@@ -22,13 +23,12 @@
   }
 
   &__submit {
+    @include flex-column;
     width: 100%;
-    display: flex;
-    flex-direction: column;
     gap: 1rem;
     margin-block-end: 2rem;
     .terms {
-      font-size: 14px;
+      @include regular-14-20;
       color: var(--gray-color-01);
 
       a {
@@ -36,6 +36,7 @@
       }
     }
     .register-button {
+      @include semibold-16-24;
       width: 100%;
       text-align: center;
     }

@@ -19,3 +19,98 @@ h3 {
 p {
   margin: 0;
 }
+
+@mixin header-22-32 {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.4545454545454546;
+}
+
+@mixin body-text-14-22 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5714285714285714;
+}
+
+@mixin regular-16-24 {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+@mixin regular-14-20 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4285714285714286;
+}
+
+@mixin regular-12-16 {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3333333333333333;
+}
+
+@mixin light-16-24 {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+@mixin medium-16-24 {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+@mixin medium-14-20 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4285714285714286;
+  text-transform: capitalize;
+}
+
+@mixin medium-12-16 {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3333333333333333;
+}
+
+@mixin semibold-20-28 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-transform: capitalize;
+}
+
+@mixin semibold-16-24 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+@mixin bold-24-28 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1666666666666667;
+}
+
+@mixin bold-16-24 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-transform: capitalize;
+}
+
+@mixin exbold-22-32 {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.4545454545454546;
+  text-transform: capitalize;
+}
+
+@mixin exbold-18-24 {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.3333333333333333;
+  text-transform: capitalize;
+}

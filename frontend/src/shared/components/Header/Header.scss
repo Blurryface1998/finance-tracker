@@ -1,11 +1,12 @@
+@use "../../../styles/utilities" as *;
+
 .header {
   padding: 0.5rem;
   background-color: var(--main-secondary-color);
 
   &__content {
-    display: flex;
+    @include flex-center;
     justify-content: space-between;
-    align-items: center;
   }
   &__logo {
     display: block;

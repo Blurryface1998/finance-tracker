@@ -32,18 +32,16 @@ const features = [
 function FeaturesSection() {
   return (
     <section className="features">
-      <Container>
-        <div className="features__container">
-          <h2 className="features__title">Features</h2>
-          {features.map((feature) => (
-            <FeaturesCard
-              key={feature.title}
-              title={feature.title}
-              description={feature.description}
-            />
-          ))}
-        </div>
-      </Container>
+      <div className="features__container">
+        <h2 className="features__title">Features</h2>
+        {features.map((feature) => (
+          <FeaturesCard
+            key={feature.title}
+            title={feature.title}
+            description={feature.description}
+          />
+        ))}
+      </div>
     </section>
   );
 }

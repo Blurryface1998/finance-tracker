@@ -1,7 +1,8 @@
+@use "../../../styles/utilities" as *;
+@use "../../../styles/typography" as *;
+
 .navbar {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+  @include flex-column;
   gap: 228px;
   position: absolute;
   top: 120px;
@@ -15,16 +16,18 @@
   z-index: 100;
 
   background-color: var(--default-black-color);
-  padding: 48px 28px;
+  padding: 3rem 1.75rem;
 
   &__header {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     gap: 40px;
   }
 
   &__title {
     font-size: 24px;
+    font-weight: 800;
+    line-height: 1.3333333333333333;
+    letter-spacing: 1.92px;
     color: var(--white-color);
   }
 
@@ -33,15 +36,19 @@
   }
 
   &__links {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
+    gap: 16px;
   }
   &__link {
-    display: flex;
-    align-items: center;
+    @include flex-center;
+
     gap: 12px;
-    padding: 12px 16px;
+    padding: 0.75rem 1rem;
     color: var(--background-color-2);
+
+    span {
+      @include regular-16-24;
+    }
 
     &--active {
       background-color: var(--primary-color);
@@ -49,43 +56,39 @@
       color: var(--white-color);
     }
   }
-  &__icon {
-  }
 
   &__footer {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     gap: 44px;
+
     .logout-button {
-      display: flex;
-      align-items: center;
+      @include flex-center;
+      @include semibold-16-24;
       gap: 12px;
       width: 100%;
       color: var(--white-color);
-      padding: 12px 16px;
+      padding: 0.75rem 1rem;
       background: var(--background-color-3);
       border-radius: 4px;
     }
   }
   &__profile {
-    display: flex;
-    align-items: center;
+    @include flex-center;
     gap: 32px;
   }
   &__account {
-    display: flex;
-    align-items: center;
+    @include flex-center;
     gap: 16px;
 
     .info {
       p {
+        @include semibold-16-24;
         color: var(--white-color);
         text-transform: capitalize;
-        font-size: 16px;
       }
       a {
+        @include regular-12-16;
         color: var(--background-color-2);
-        font-size: 12px;
       }
     }
   }

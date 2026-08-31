@@ -1,16 +1,17 @@
+@use "../../../styles/utilities" as *;
+@use "../../../styles/typography" as *;
+
 .form {
   width: 100%;
   max-width: 400px;
 
   &__content {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     gap: 2rem;
   }
 
   &__inputs {
-    display: flex;
-    flex-direction: column;
+    @include flex-column;
     align-items: stretch;
     gap: 1.5rem;
   }
@@ -18,6 +19,8 @@
   .forgot-password {
     color: var(--primary-color);
     font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.3333333333333333;
   }
 
   &__password {
@@ -38,13 +41,12 @@
 
   &__action {
     .user-remember {
-      display: flex;
-      align-items: center;
+      @include flex-center;
+      @include light-16-24;
       position: relative;
       padding-left: 2.5rem;
       margin-bottom: 1rem;
       cursor: pointer;
-      font-size: 1rem;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -93,7 +95,7 @@
     .login-button {
       width: 100%;
       border-radius: 4px;
-      font-weight: 700;
+      @include semibold-16-24;
     }
   }
 }
