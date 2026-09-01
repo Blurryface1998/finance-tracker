@@ -1,0 +1,94 @@
+@use "../../../../styles/utilities" as *;
+@use "../../../../styles/typography" as *;
+
+.transaction {
+  @include flex-column;
+  gap: 8px;
+
+  &__header {
+    width: 352px;
+    @include flex-center;
+    justify-content: space-between;
+
+    h2 {
+      @include header-22-32;
+      color: var(--gray-color-02);
+    }
+
+    button {
+      @include flex-center;
+      @include medium-12-16;
+      gap: 8px;
+      color: var(--gray-color-02);
+    }
+  }
+  &__card {
+    gap: 12px;
+    padding: 24px 34px 24px 16px;
+
+    &--header {
+      display: flex;
+      gap: 20px;
+      width: 304px;
+      border-bottom: 1px solid hsla(0, 0%, 62.35%, 0);
+
+      button {
+        @include bold-16-24;
+        color: var(--secondary-color);
+        padding: 8px;
+        border: 2px solid;
+        border-color: hsla(173, 58.59%, 38.82%, 0);
+      }
+      .active {
+        border-color: hsla(173, 58.59%, 38.82%, 1);
+        color: var(--primary-color);
+      }
+    }
+    &--items {
+      @include flex-column;
+
+      .item {
+        @include flex-center;
+        gap: 28px;
+        padding-block: 24px;
+        border: 1px solid hsla(0, 0%, 0%, 0);
+
+        &__details {
+          @include flex-center;
+          gap: 16px;
+
+          img {
+            padding: 8px;
+            border-radius: 8px;
+            background-color: var(--background-color-1);
+          }
+          .text {
+            @include flex-column;
+            p {
+              @include semibold-16-24;
+              width: 146px;
+            }
+            span {
+              @include regular-12-16;
+              color: var(--gray-color-03);
+              text-transform: capitalize;
+            }
+          }
+        }
+        &__amount {
+          @include flex-column;
+          justify-content: center;
+
+          p {
+            @include semibold-16-24;
+            color: var(--secondary-color);
+          }
+          span {
+            @include regular-12-16;
+            color: var(--gray-color-03);
+          }
+        }
+      }
+    }
+  }
+}

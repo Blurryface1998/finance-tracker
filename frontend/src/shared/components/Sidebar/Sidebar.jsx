@@ -23,7 +23,7 @@ function Sidebar({ links = [], isOpen }) {
               {link.icon && (
                 <img src={link.icon} alt="" className="navbar__icon" />
               )}
-              <span>{link.label}</span>
+              {link.label}
             </NavLink>
           ))}
         </nav>

@@ -1,0 +1,320 @@
+@use "../../../../styles/utilities" as *;
+@use "../../../../styles/typography" as *;
+
+.container {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+
+  &__article {
+    @include flex-column;
+    gap: 8px;
+  }
+
+  &__title {
+    @include header-22-32;
+    color: var(--gray-color-02);
+    height: 32px;
+  }
+
+  &__card {
+    padding: 20px 24px;
+    &--details {
+      @include flex-column;
+      gap: 12px;
+
+      &--header {
+        @include flex-center;
+        width: 304px;
+        justify-content: space-between;
+        padding-block-end: 12px;
+        border-bottom: 1px solid hsla(0, 0%, 95.29%, 1);
+
+        h2 {
+          @include exbold-22-32;
+          height: 32px;
+        }
+        p {
+          @include medium-14-20;
+          height: 20px;
+          color: var(--secondary-color);
+          text-transform: capitalize;
+        }
+      }
+
+      &--account-type {
+        @include flex-center;
+        justify-content: space-between;
+        width: 304px;
+        padding: 16px;
+        background-color: var(--primary-color);
+        border-radius: 4px;
+
+        .content {
+          @include flex-column;
+
+          span,
+          p {
+            width: 120px;
+            @include medium-14-20;
+            color: var(--background-color-2);
+          }
+          h3 {
+            @include bold-16-24;
+            color: var(--white-color);
+            width: 120px;
+          }
+          p {
+            width: 136px;
+          }
+        }
+
+        .logo {
+          @include flex-column;
+          align-items: end;
+          justify-content: center;
+          gap: 12px;
+
+          img {
+            width: 48px;
+            height: 28px;
+          }
+
+          &__amount-button {
+            @include flex-center;
+            gap: 12px;
+
+            p {
+              @include bold-16-24;
+
+              color: var(--white-color);
+            }
+            button {
+              padding: 4px;
+              background-color: var(--white-color);
+              border-radius: 20px;
+
+              img {
+                width: 16px;
+                height: 16px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &--slider-options {
+      @include flex-center;
+      justify-content: space-between;
+      width: 304px;
+
+      .previous {
+        @include flex-center;
+        @include medium-14-20;
+        width: 80px;
+        gap: 4px;
+        /*color: var(--gray-color-04);*/ /* when now more pages left */
+        button {
+          height: 20px;
+        }
+        .arrow-right {
+          transform: rotate(180deg);
+        }
+      }
+
+      .slider {
+        display: flex;
+        gap: 8px;
+        .active {
+          background-color: var(--primary-color);
+        }
+        button {
+          width: 8px;
+          height: 8px;
+          background-color: var(--gray-color-04);
+          border-radius: 20px;
+        }
+      }
+
+      .next {
+        @include flex-center;
+        gap: 4px;
+
+        button {
+          @include medium-14-20;
+
+          height: 20px;
+        }
+      }
+    }
+
+    &--goals-header {
+      @include flex-center;
+      justify-content: space-between;
+      width: 302px;
+      padding-block-end: 12px;
+      border-bottom: 1px solid hsla(0, 0%, 95.29%, 1);
+
+      .goals-header {
+        @include flex-center;
+        gap: 9px;
+
+        h2 {
+          @include exbold-22-32;
+          height: 32px;
+        }
+
+        button {
+          border-radius: 4px;
+          padding: 8px;
+          background-color: var(--background-color-1);
+        }
+      }
+      span {
+        @include medium-14-20;
+        height: 20px;
+        color: var(--secondary-color);
+      }
+    }
+
+    &--goals-details {
+      height: 128px;
+      display: flex;
+      gap: 16px;
+
+      .left {
+        @include flex-column;
+        justify-content: center;
+        height: 124px;
+        gap: 24px;
+
+        &__target {
+          display: flex;
+          gap: 4px;
+          img {
+            width: 24px;
+            height: 24px;
+          }
+          &--text {
+            @include flex-column;
+            gap: 4px;
+
+            span {
+              @include regular-12-16;
+              width: 116px;
+              color: var(--gray-color-02);
+            }
+            p {
+              @include bold-16-24;
+              width: 112px;
+            }
+          }
+        }
+      }
+
+      .right {
+        @include flex-column;
+        align-items: center;
+        gap: 14px;
+
+        .graph {
+          @include flex-column;
+          gap: 6px;
+        }
+        p {
+          @include medium-12-16;
+          height: 16px;
+        }
+      }
+    }
+  }
+  &__upper {
+    @include flex-center;
+    gap: 128px;
+
+    button {
+      @include flex-center;
+      @include medium-12-16;
+      height: 16px;
+      gap: 8px;
+      color: var(--gray-color-02);
+    }
+  }
+  &__bill-card {
+    padding: 24px;
+    .bill-one {
+      border-bottom: 1px solid hsla(0, 0%, 95.29%, 1);
+      padding-block: 8px;
+    }
+
+    &--bill {
+      @include flex-center;
+      justify-content: space-between;
+      width: 304px;
+      padding-block: 6px;
+
+      .details {
+        @include flex-center;
+        gap: 12px;
+      }
+
+      .date {
+        @include flex-column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        padding: 8px;
+        border-radius: 8px;
+        background-color: var(--background-color-1);
+        border: 1px solid hsla(0, 0.98%, 60%, 0);
+
+        .month {
+          @include medium-12-16;
+          width: 28px;
+          color: var(--gray-color-01);
+        }
+        .day {
+          @include exbold-22-32;
+          width: 28px;
+        }
+      }
+      .description {
+        @include flex-column;
+        gap: 4px;
+
+        img {
+          height: 16px;
+        }
+
+        .subscription-name {
+          @include flex-column;
+          gap: 2px;
+          h3 {
+            @include bold-16-24;
+            width: 160px;
+            color: var(--secondary-color);
+          }
+          span {
+            @include regular-12-16;
+            width: 160px;
+            color: var(--gray-color-03);
+          }
+        }
+      }
+    }
+    &--amount {
+      border-radius: 8px;
+      background-color: var(--white-color);
+      border: 1px solid hsla(0, 0%, 90.98%, 1);
+      padding: 8px 12px;
+
+      p {
+        align-self: stretch;
+        @include bold-16-24;
+        width: 44px;
+        color: var(--secondary-color);
+      }
+    }
+  }
+}

@@ -1,28 +1,28 @@
 :root {
   /* Colors: */
-  --primary-color: #299d91;
-  --secondary-color: #525256;
-  --default-black-color: #191919;
-  --white-color: #ffffff;
+  --primary-color: hsl(174, 59%, 39%);
+  --secondary-color: hsl(240, 2%, 33%);
+  --default-black-color: hsl(0, 0%, 10%);
+  --white-color: hsl(0, 0%, 100%);
 
-  --gray-color-01: #666666;
-  --gray-color-02: #878787;
-  --gray-color-03: #9f9f9f;
-  --gray-color-04: #d1d1d1;
-  --gray-color-05: #e8e8e8;
-  --gray-color-06: #f3f3f3;
+  --gray-color-01: hsl(0, 0%, 40%);
+  --gray-color-02: hsl(0, 0%, 53%);
+  --gray-color-03: hsl(0, 0%, 62%);
+  --gray-color-04: hsl(0, 0%, 82%);
+  --gray-color-05: hsl(0, 0%, 91%);
+  --gray-color-06: hsl(0, 0%, 95%);
 
   --background-color-3: hsla(0, 0%, 100%, 0.08);
-  --background-color-2: hsla(0, 0%, 100%, 0.7);
+  --background-color-2: hsla(0, 0%, 100%, 0.702);
   --background-color-1: hsla(0, 0%, 82%, 0.25);
-  --main-background-color: #f4f5f7;
-  --main-secondary-color: #e6ebff;
-  --red-color: #e73d1c;
-  --green-color: #4daf6e;
-  --primary-color-hover: #258e83;
+  --main-background-color: hsl(220, 16%, 96%);
+  --main-secondary-color: hsl(228, 100%, 95%);
+  --red-color: hsl(10, 81%, 51%);
+  --green-color: hsl(140, 39%, 49%);
+  --primary-color-hover: hsl(174, 59%, 35%);
 
   --drop-shadow: 0px 26px 26px 0px hsla(334, 66%, 25%, 0.04);
-  --shadow-01: 0px 20px 25px hsla(173, 15%, 35%, 0.1);
+  --shadow-01: 0px 20px 25px 0px hsla(173, 15.08%, 35.1%, 0.1);
   --shadow-02: 0px 12px 16px hsla(173, 15%, 35%, 0.15);
   --sha: -1049px -732px 358px hsla(180, 20%, 1%, 0) -671px -469px 327px
     hsla(180, 20%, 1%, 0.01) -377px -264px 276px

@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useTransaction } from "../../transactions/hooks/useTransaction";
-import TopContent from "../components/TopContent";
+import TopContent from "../components/TopContent/TopContent";
+import RecentTransaction from "../components/RecentTransaction/RecentTransaction";
+import Statistics from "../components/Statistics/Statistics";
+import ExpensesBreakDown from "../components/ExpensesBreakdown/ExpensesBreakDown";
 import "./OverviewPage.scss";
 
 const dummyTransactions = [
@@ -56,6 +59,9 @@ function OverviewPage() {
   return (
     <div>
       <TopContent />
+      <RecentTransaction />
+      <Statistics />
+      <ExpensesBreakDown />
     </div>
   );
 }

@@ -1,12 +1,12 @@
-import Card from "../../../shared/components/Card/Card";
-import MasterCard from "../../../assets/credit-card-logos/Mastercard.svg";
-import ArrowUpRight from "../../../assets/button-icons/arrow-up-right.svg";
-import Arrow from "../../../assets/button-icons/chevron-right.svg";
-import Edit from "../../../assets/button-icons/edit.svg";
-import Award from "../../../assets/icons/Award.svg";
-import Goal from "../../../assets/icons/octicon-goal.svg";
+import Card from "../../../../shared/components/Card/Card";
+import MasterCard from "../../../../assets/credit-card-logos/Mastercard.svg";
+import ArrowUpRight from "../../../../assets/button-icons/arrow-up-right.svg";
+import Arrow from "../../../../assets/button-icons/chevron-right.svg";
+import Edit from "../../../../assets/button-icons/edit.svg";
+import Award from "../../../../assets/icons/Award.svg";
+import Goal from "../../../../assets/icons/octicon-goal.svg";
+import GoalGauge from "../../../../shared/components/GoalGauge/GoalGauge";
 import "./TopContent.scss";
-import GoalGauge from "../../../shared/components/GoalGauge/GoalGauge";
 
 function TopContent() {
   return (
@@ -86,7 +86,7 @@ function TopContent() {
             <div className="left">
               <div className="left__target">
                 <img src={Award} alt="Award icon" />
-                <div>
+                <div className="left__target--text">
                   <span>Target Achived</span>
                   <p>$12,500</p> {/* see wjhere it comes from */}
                 </div>
@@ -94,7 +94,7 @@ function TopContent() {
 
               <div className="left__target">
                 <img src={Goal} alt="Goal icon" />
-                <div>
+                <div className="left__target--text">
                   <span>This month Target</span>
                   <p>$20,000</p> {/* see where it comes from */}
                 </div>
@@ -103,7 +103,7 @@ function TopContent() {
 
             <div className="right">
               <div className="graph">
-                <GoalGauge current={1000} goal={5000} />
+                <GoalGauge current={2500} goal={9999} />
               </div>
               <p>Target vs Achievement</p>
             </div>
@@ -118,26 +118,26 @@ function TopContent() {
             View All <img src={Arrow} alt="right arow icon" />
           </button>
         </div>
-        <Card className="contiainer__card">
-          <div className="container__bill">
+        <Card className="container__bill-card">
+          <div className="container__bill-card--bill bill-one">
             <div className="details">
               <div className="date">
                 <p className="month">May</p>
                 <p className="day">15</p>
               </div>
               <div className="description">
-                <h2>Figma</h2>
+                <img src="" alt="logo of the company" />
                 <div className="subscription-name">
                   <h3>Figma - Monthly</h3>
                   <span>Last Charge - 14 may, 2022</span>
                 </div>
               </div>
             </div>
-            <div className="container__amount">
+            <div className="container__bill-card--amount">
               <p>$150</p>
             </div>
           </div>
-          <div className="container__bill">
+          <div className="container__bill-card--bill bill-two">
             <div className="details">
               <div className="date">
                 <p className="month">Jun</p>
@@ -145,14 +145,14 @@ function TopContent() {
               </div>
 
               <div className="description">
-                <h2>Adobe</h2>
+                <img src="" alt="logo of the company" />
                 <div className="subscription-name">
                   <h3>Adobe - Yearly</h3>
                   <span>Last Charge - 17, jun, 2023</span>
                 </div>
               </div>
             </div>
-            <div className="container__amount">
+            <div className="container__bill-card--amount">
               <p>$559</p>
             </div>
           </div>

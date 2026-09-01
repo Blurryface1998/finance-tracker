@@ -1,0 +1,49 @@
+@use "../../../../styles/utilities" as *;
+@use "../../../../styles/typography" as *;
+
+.statistic {
+  @include flex-column;
+  gap: 8px;
+
+  &__title {
+    @include header-22-32;
+    color: var(--gray-color-02);
+  }
+
+  &__card {
+    gap: 14px;
+    padding: 24px 40px 24px 16px;
+    &--header {
+      @include flex-center;
+      justify-content: space-between;
+      width: 680px;
+      .comparison-button {
+        @include flex-center;
+        @include semibold-16-24;
+        gap: 12px;
+      }
+      .indicator {
+        @include flex-center;
+        justify-content: end;
+        gap: 24px;
+        .this {
+          @include flex-center;
+          gap: 8px;
+          .rectangle {
+            width: 16px;
+            height: 8px;
+            border-radius: 2px;
+            background-color: var(--primary-color);
+          }
+          span {
+            @include medium-12-16;
+            color: var(--secondary-color);
+          }
+          .last {
+            background-color: var(--gray-color-05);
+          }
+        }
+      }
+    }
+  }
+}

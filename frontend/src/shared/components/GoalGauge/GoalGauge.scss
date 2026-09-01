@@ -1,6 +1,12 @@
+@use "../../../styles/utilities" as *;
+@use "../../../styles/typography" as *;
+
+.graph {
+  width: 128px;
+}
+
 .goal-gauge {
-  width: 100%;
-  max-width: 128px;
+  width: 128px;
   height: 68px;
 
   &__svg {
@@ -11,30 +17,47 @@
   }
 
   &__track {
-    fill: var(--gray-color-05);
+    fill: #e8e8e8;
   }
 
   &__progress {
-    fill: var(--primary-color);
+    fill: none;
+    stroke: #299d91;
+    stroke-width: 12.8;
+    stroke-linecap: round;
+
+    transition: stroke-dasharray 0.5s ease;
   }
 
-  &__needle {
-    fill: var(--primary-color);
+  &__needle-wrapper {
     transition: transform 0.5s ease;
   }
 
+  &__needle {
+    fill: #299d91;
+  }
+
   &__pivot {
-    fill: var(--primary-color);
+    fill: #299d91;
   }
 
   &__range {
-    align-self: stretch;
-    width: 144px;
-    height: auto;
-    display: flex;
-    align-items: center;
+    @include flex-center;
     justify-content: space-between;
-    p {
+    width: 144px;
+    .start {
+      @include medium-12-16;
+      color: var(--gray-color-04);
+      width: 26px;
+    }
+    .current {
+      @include semibold-16-24;
+      width: 30px;
+    }
+    .goal {
+      @include medium-12-16;
+      max-width: 32px;
+
       color: var(--gray-color-04);
     }
   }
