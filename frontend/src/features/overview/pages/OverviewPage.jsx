@@ -4,7 +4,7 @@ import { useTransaction } from "../../transactions/hooks/useTransaction";
 import TopContent from "../components/TopContent/TopContent";
 import RecentTransaction from "../components/RecentTransaction/RecentTransaction";
 import Statistics from "../components/Statistics/Statistics";
-import ExpensesBreakDown from "../components/ExpensesBreakdown/ExpensesBreakDown";
+import ExpensesBreakdown from "../components/ExpensesBreakdown/ExpensesBreakdown";
 import "./OverviewPage.scss";
 
 const dummyTransactions = [
@@ -57,11 +57,19 @@ function OverviewPage() {
   if (loading) return <p>Loading data...</p>;
 
   return (
-    <div>
-      <TopContent />
-      <RecentTransaction />
-      <Statistics />
-      <ExpensesBreakDown />
+    <div className="overview">
+      <div className="overview__top">
+        <TopContent />
+      </div>
+      <div className="overview__left">
+        <RecentTransaction />
+      </div>
+      <div className="overview__right-top">
+        <Statistics />
+      </div>
+      <div className="overview__right-bottom">
+        <ExpensesBreakdown />
+      </div>
     </div>
   );
 }
