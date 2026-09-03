@@ -3,13 +3,11 @@
 
 .breakdown {
   @include flex-column;
-  align-items: center;
   gap: 8px;
+
   &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    width: 728px;
+    @include flex-column;
+
     &--title {
       @include header-22-32;
       color: var(--gray-color-02);
@@ -19,20 +17,23 @@
       color: var(--gray-color-03);
     }
   }
+
   &__card {
-    padding: 20px 24px;
+    /*padding: 20px 24px;*/
     gap: 0;
+
     &--all-items {
       @include flex-column;
-      gap: 24px;
+      /*gap: 24px;*/
       .components {
         display: flex;
-        gap: 40px;
+        flex-wrap: wrap;
+        gap: 10px;
 
         &__item {
           display: flex;
-          gap: 16px;
-          padding: 8px 16px;
+          /*gap: 16px;*/
+          /*padding: 8px 16px;*/
 
           &--icon {
             height: 56px;
@@ -82,6 +83,90 @@
             }
             img {
               opacity: 0.5;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .breakdown {
+    align-items: center;
+
+    &__header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: end;
+      width: 728px;
+    }
+
+    &__card {
+      padding: 20px 24px;
+      gap: 0;
+      &--all-items {
+        @include flex-column;
+        gap: 24px;
+        .components {
+          display: flex;
+          gap: 40px;
+
+          &__item {
+            display: flex;
+            gap: 16px;
+            padding: 8px 16px;
+
+            &--icon {
+              height: 56px;
+              border-radius: 8px;
+              background-color: var(--background-color-2);
+              padding: 8px;
+              display: flex;
+              gap: 8px;
+              align-items: center;
+              justify-content: center;
+
+              img {
+              }
+            }
+
+            &--details {
+              @include flex-center;
+              .content {
+                @include flex-column;
+                &__name {
+                  @include flex-column;
+
+                  span {
+                    @include medium-12-16;
+                    color: var(--gray-color-02);
+                    width: 88px;
+                  }
+
+                  p {
+                    @include bold-16-24;
+                    width: 88px;
+                  }
+                }
+
+                &__percentage {
+                  @include flex-center;
+                  gap: 8px;
+                  border-radius: 16px;
+
+                  span {
+                    @include medium-12-16;
+                    color: var(--gray-color-03);
+                  }
+                  img {
+                  }
+                }
+              }
+              img {
+                opacity: 0.5;
+              }
             }
           }
         }

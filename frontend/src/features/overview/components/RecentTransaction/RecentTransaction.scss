@@ -4,11 +4,10 @@
 .transaction {
   @include flex-column;
   gap: 8px;
-  height: 100%;
 
   &__header {
-    width: 352px;
-    @include flex-center;
+    display: flex;
+    align-items: baseline;
     justify-content: space-between;
 
     h2 {
@@ -23,14 +22,14 @@
       color: var(--gray-color-02);
     }
   }
+
   &__card {
     gap: 12px;
-    padding: 24px 34px 24px 16px;
+    padding: 16px 16px 34px 16px;
 
     &--header {
       display: flex;
       gap: 20px;
-      width: 304px;
       border-bottom: 1px solid hsla(0, 0%, 62.35%, 0);
 
       button {
@@ -45,18 +44,18 @@
         color: var(--primary-color);
       }
     }
+
     &--items {
       @include flex-column;
 
       .item {
         @include flex-center;
         gap: 28px;
-        padding-block: 24px;
-        border: 1px solid hsla(0, 0%, 0%, 0);
+        padding-block: 10px;
 
         &__details {
           @include flex-center;
-          gap: 16px;
+          gap: 8px;
 
           img {
             padding: 8px;
@@ -76,9 +75,9 @@
             }
           }
         }
+
         &__amount {
           @include flex-column;
-          justify-content: center;
 
           p {
             @include semibold-16-24;
@@ -87,6 +86,41 @@
           span {
             @include regular-12-16;
             color: var(--gray-color-03);
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .transaction {
+    @include flex-column;
+    gap: 8px;
+
+    &__header {
+      align-items: center;
+      width: 352px;
+    }
+    &__card {
+      padding: 16px 24px 34px 24px;
+
+      &--header {
+        width: 304px;
+      }
+
+      &--items {
+        .item {
+          padding-block: 24px;
+
+          &__details {
+            gap: 16px;
+          }
+
+          &__amount {
+            justify-content: center;
+            align-items: end;
           }
         }
       }

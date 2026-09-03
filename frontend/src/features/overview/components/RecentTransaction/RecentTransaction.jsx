@@ -1,5 +1,6 @@
 import Card from "../../../../shared/components/Card/Card";
 import Arrow from "../../../../assets/button-icons/chevron-right.svg";
+import Gamepad from "../../../../assets/category/gamepad-2.svg";
 import "./RecentTransaction.scss";
 
 function RecentTransaction() {
@@ -20,7 +21,63 @@ function RecentTransaction() {
         <div className="transaction__card--items">
           <div className="item">
             <div className="item__details">
-              <img src="" alt="" />
+              <img src={Gamepad} alt="" />
+              <div className="text">
+                <p>Keyboard</p>
+                <span>Gadget and gear</span>
+              </div>
+            </div>
+            <div className="item__amount">
+              <p>$22.00</p>
+              <span>17 may 2023</span>
+            </div>
+          </div>
+
+          <div className="item">
+            <div className="item__details">
+              <img src={Gamepad} alt="" />
+              <div className="text">
+                <p>Keyboard</p>
+                <span>Gadget and gear</span>
+              </div>
+            </div>
+            <div className="item__amount">
+              <p>$22.00</p>
+              <span>17 may 2023</span>
+            </div>
+          </div>
+
+          <div className="item">
+            <div className="item__details">
+              <img src={Gamepad} alt="" />
+              <div className="text">
+                <p>Keyboard</p>
+                <span>Gadget and gear</span>
+              </div>
+            </div>
+            <div className="item__amount">
+              <p>$22.00</p>
+              <span>17 may 2023</span>
+            </div>
+          </div>
+
+          <div className="item">
+            <div className="item__details">
+              <img src={Gamepad} alt="" />
+              <div className="text">
+                <p>Keyboard</p>
+                <span>Gadget and gear</span>
+              </div>
+            </div>
+            <div className="item__amount">
+              <p>$22.00</p>
+              <span>17 may 2023</span>
+            </div>
+          </div>
+
+          <div className="item">
+            <div className="item__details">
+              <img src={Gamepad} alt="" />
               <div className="text">
                 <p>Keyboard</p>
                 <span>Gadget and gear</span>
