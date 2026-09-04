@@ -1,15 +1,16 @@
 import Card from "../../../../shared/components/Card/Card";
+import DownArrow from "../../../../assets/arrows/Down-arrow.svg";
 import "./Statistics.scss";
-function Statistics() {
+function Statistics({ transactions }) {
   return (
     <div className="statistic">
       <h1 className="statistic__title">Statistics</h1>
 
-      <Card className="statistic_card">
+      <Card className="statistic__card">
         <div className="statistic__card--header">
           <button className="comparison-button">
             Weekly Comparison
-            <img src="" alt="icon for down" />
+            <img src={DownArrow} alt="icon for down" />
           </button>
 
           <div className="indicator">

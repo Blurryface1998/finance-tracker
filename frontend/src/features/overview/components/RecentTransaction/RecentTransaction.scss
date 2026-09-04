@@ -45,6 +45,15 @@
       }
     }
 
+    &--no-transactions {
+      @include flex-column;
+      align-items: center;
+      gap: 16px;
+      p {
+        @include semibold-16-24;
+      }
+    }
+
     &--items {
       @include flex-column;
 

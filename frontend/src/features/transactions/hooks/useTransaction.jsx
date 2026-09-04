@@ -6,9 +6,9 @@ export function useTransaction() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchTranasactions = async (filters = {}) => {
+  const fetchTransactions = async (filters = {}) => {
     try {
-      setLoading(false);
+      setLoading(true);
       setError(null);
 
       const data = await getTransactions(filters);
@@ -28,6 +28,6 @@ export function useTransaction() {
     transactions,
     loading,
     error,
-    fetchTranasactions,
+    fetchTransactions,
   };
 }

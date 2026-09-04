@@ -29,7 +29,7 @@ export const getTransaction = async (transactionId) => {
 };
 
 export const createTransaction = async (data) => {
-  const response = await api.post("/transctions", data);
+  const response = await api.post("/transactions", data);
 
   return response.data;
 };

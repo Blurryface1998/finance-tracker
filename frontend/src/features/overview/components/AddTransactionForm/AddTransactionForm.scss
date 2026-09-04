@@ -1,0 +1,32 @@
+@use "../../../../styles/utilities" as *;
+@use "../../../../styles/typography" as *;
+
+form {
+  width: 100%;
+  max-width: 400px;
+  @include flex-column;
+  gap: 0.5rem;
+  label {
+    @include medium-16-24;
+  }
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--gray-color-03);
+    border-radius: 9px;
+    padding: 0.75rem 1rem;
+  }
+  input::placeholder {
+    color: var(--gray-color-01);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375;
+  }
+  input:focus {
+    border-color: var(--gray-color-02);
+  }
+  select {
+  }
+  button {
+  }
+}

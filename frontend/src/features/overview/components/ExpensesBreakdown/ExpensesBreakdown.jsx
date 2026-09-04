@@ -4,7 +4,7 @@ import RedArrow from "../../../../assets/arrows/Up-arrow.svg";
 import GreenArrow from "../../../../assets/arrows/Down-arrow-1.svg";
 import Housing from "../../../../assets/category/Housing.svg";
 import "./ExpensesBreakdown.scss";
-function ExpensesBreakdown() {
+function ExpensesBreakdown({ transactions }) {
   return (
     <div className="breakdown">
       <div className="breakdown__header">
@@ -125,7 +125,7 @@ function ExpensesBreakdown() {
               </div>
             </div>
           </div>
-          <img src="" alt="split line" />
+          <img className="line" src="" alt="split line" />
         </div>
       </Card>
     </div>

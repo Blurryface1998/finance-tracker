@@ -5,6 +5,8 @@ import TopContent from "../components/TopContent/TopContent";
 import RecentTransaction from "../components/RecentTransaction/RecentTransaction";
 import Statistics from "../components/Statistics/Statistics";
 import ExpensesBreakdown from "../components/ExpensesBreakdown/ExpensesBreakdown";
+import Modal from "../../../shared/components/Modal/Modal";
+import AddTransactionForm from "../components/AddTransactionForm/AddTransactionForm";
 import "./OverviewPage.scss";
 
 const dummyTransactions = [
@@ -48,21 +50,51 @@ const dummyTransactions = [
     transaction_type: "income",
     created_at: "2026-08-23T14:45:00",
   },
+  {
+    id: 6,
+    description: "Freelance jos",
+    amount: "35000.00",
+    category: "Income",
+    transaction_type: "income",
+    created_at: "2026-08-23T14:45:00",
+  },
 ];
 
 function OverviewPage() {
+  const [isAddTransactionOpen, setIsAddTransactionOpen] = useState(false);
   const { user, loading } = useAuth();
-  const { transactions } = useTransaction();
+  const { transactions, loadings, filters, error, fetchTransactions } =
+    useTransaction();
+  const [transactionType, setTransactionType] = useState("all");
+
+  useEffect(() => {
+    if (!loading && user) {
+      fetchTransactions(
+        transactionType === "all" ? {} : { transaction_type: transactionType },
+      );
+    }
+  }, [loading, user, transactionType]);
 
   if (loading) return <p>Loading data...</p>;
 
   return (
     <div className="overview">
+      {isAddTransactionOpen && (
+        <Modal onClose={() => setIsAddTransactionOpen(false)}>
+          <AddTransactionForm />
+        </Modal>
+      )}
       <div className="overview__top">
         <TopContent />
       </div>
       <div className="overview__left">
-        <RecentTransaction />
+        <RecentTransaction
+          transactions={transactions}
+          loading={loadings}
+          transactionType={transactionType}
+          onTransactionTypeChange={setTransactionType}
+          openAddTransaction={setIsAddTransactionOpen}
+        />
       </div>
       <div className="overview__right-top">
         <Statistics />
