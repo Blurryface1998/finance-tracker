@@ -8,11 +8,9 @@
 
 @media screen and (min-width: 1024px) {
   .dashboard-layout {
-    min-height: 100vh;
     display: grid;
     grid-template-columns: 280px 1fr;
-    &__main {
-    }
+    min-height: 100vh;
 
     &__content {
       padding: 16px 32px 34px 24px;

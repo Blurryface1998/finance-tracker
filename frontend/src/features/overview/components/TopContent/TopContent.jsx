@@ -8,7 +8,7 @@ import Goal from "../../../../assets/icons/octicon-goal.svg";
 import GoalGauge from "../../../../shared/components/GoalGauge/GoalGauge";
 import "./TopContent.scss";
 
-function TopContent() {
+function TopContent({ content, loading }) {
   return (
     <div className="container">
       <div className="container__article">

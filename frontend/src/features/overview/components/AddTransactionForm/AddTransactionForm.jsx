@@ -5,7 +5,7 @@ import { submitWithLoading } from "../../../../shared/utils/formSubmit";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Loader from "../../../../shared/components/Loader/Loader";
-function AddTransactionForm() {
+function AddTransactionForm({ onTransactionCreate, onClose }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { register, handleSubmit, clearErrors } = useForm();
@@ -17,6 +17,8 @@ function AddTransactionForm() {
         setLoading: setIsLoading,
         clearErrors,
       });
+      onTransactionCreate();
+      onClose();
       console.log(response);
     } catch (err) {
       console.error("Status:", err.response?.status);

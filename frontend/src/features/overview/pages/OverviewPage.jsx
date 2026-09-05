@@ -8,7 +8,6 @@ import ExpensesBreakdown from "../components/ExpensesBreakdown/ExpensesBreakdown
 import Modal from "../../../shared/components/Modal/Modal";
 import AddTransactionForm from "../components/AddTransactionForm/AddTransactionForm";
 import "./OverviewPage.scss";
-
 const dummyTransactions = [
   {
     id: 1,
@@ -62,26 +61,39 @@ const dummyTransactions = [
 
 function OverviewPage() {
   const [isAddTransactionOpen, setIsAddTransactionOpen] = useState(false);
-  const { user, loading } = useAuth();
-  const { transactions, loadings, filters, error, fetchTransactions } =
-    useTransaction();
+  const { user, loading: authLoading } = useAuth();
+  const {
+    transactions,
+    loading: transactionLoading,
+    filters,
+    error,
+    fetchTransactions,
+  } = useTransaction();
   const [transactionType, setTransactionType] = useState("all");
 
+  const loadTransaction = () => {
+    fetchTransactions(
+      transactionType === "all" ? {} : { transaction_type: transactionType },
+    );
+  };
   useEffect(() => {
-    if (!loading && user) {
+    if (!authLoading && user) {
       fetchTransactions(
         transactionType === "all" ? {} : { transaction_type: transactionType },
       );
     }
-  }, [loading, user, transactionType]);
+  }, [authLoading, user, transactionType]);
 
-  if (loading) return <p>Loading data...</p>;
+  if (authLoading) return <p>Loading data...</p>;
 
   return (
     <div className="overview">
       {isAddTransactionOpen && (
         <Modal onClose={() => setIsAddTransactionOpen(false)}>
-          <AddTransactionForm />
+          <AddTransactionForm
+            onTransactionCreate={loadTransaction}
+            onClose={() => setIsAddTransactionOpen(false)}
+          />
         </Modal>
       )}
       <div className="overview__top">
@@ -90,7 +102,7 @@ function OverviewPage() {
       <div className="overview__left">
         <RecentTransaction
           transactions={transactions}
-          loading={loadings}
+          loading={transactionLoading}
           transactionType={transactionType}
           onTransactionTypeChange={setTransactionType}
           openAddTransaction={setIsAddTransactionOpen}

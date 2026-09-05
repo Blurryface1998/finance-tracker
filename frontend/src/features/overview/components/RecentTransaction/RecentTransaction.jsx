@@ -38,7 +38,7 @@ function RecentTransaction({
 
           <button
             type="button"
-            className={transactionType === "income" ? "acitve" : ""}
+            className={transactionType === "income" ? "active" : ""}
             onClick={() => onTransactionTypeChange("income")}
           >
             income

@@ -2,31 +2,32 @@
   padding: 1rem;
   @media screen and (min-width: 1024px) {
     display: grid;
+    grid-template-columns: 352px 728px;
     grid-template-areas:
       "top top"
       "left right-top"
       "left right-bottom";
 
+    column-gap: 24px;
+    row-gap: 32px;
     &__top {
       grid-area: top;
-      margin-bottom: 32px;
     }
 
     &__left {
       grid-area: left;
-      margin-right: 24px;
+
+      min-width: 0;
     }
 
     &__right-top {
       grid-area: right-top;
-      margin-bottom: 32px;
+
+      min-width: 0;
     }
     &__right-bottom {
-      /*max-width: 728px;
-        max-height: 252px;*/
       grid-area: right-bottom;
-      /*grid-column: 2;
-        grid-row: 3;*/
+      min-width: 0;
     }
   }
 }

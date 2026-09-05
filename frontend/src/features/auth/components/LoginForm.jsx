@@ -1,19 +1,20 @@
 import { data, Form, Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useForm, set } from "react-hook-form";
-import api from "../../../services/api/axios";
 import Container from "../../../shared/components/Container/Container";
 import ButtonLink from "../../../shared/components/ButtonLink/ButtonLink";
 import Eye from "../../../assets/eye.svg";
 import FormField from "./FormField/FormField";
-import { loginUser } from "../services/authService";
+import { loginUser, getCurrentUser } from "../services/authService";
 import { handleFormError } from "../../../shared/utils/errorMessages";
 import { submitWithLoading } from "../../../shared/utils/formSubmit";
 import Loader from "../../../shared/components/Loader/Loader";
-import { minimumLoadingTime } from "../../../shared/utils/loading";
+
+import { useAuth } from "../hooks/useAuth";
 import "./LoginForm.scss";
 
 function LoginForm() {
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -28,8 +29,8 @@ function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await submitWithLoading({
-        request: () => loginUser(data),
+      await submitWithLoading({
+        request: () => login(data),
         setLoading: setIsLoading,
         clearErrors,
       });

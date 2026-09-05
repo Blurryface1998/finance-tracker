@@ -24,6 +24,7 @@
   }
 
   &__card {
+    height: 542px;
     gap: 12px;
     padding: 16px 16px 34px 16px;
 
@@ -46,8 +47,10 @@
     }
 
     &--no-transactions {
+      flex: 1;
       @include flex-column;
       align-items: center;
+      justify-content: center;
       gap: 16px;
       p {
         @include semibold-16-24;

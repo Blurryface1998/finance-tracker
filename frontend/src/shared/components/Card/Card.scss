@@ -2,6 +2,8 @@
 
 .card {
   @include flex-column;
+  min-height: 212px;
+  width: 100%;
   gap: 20px;
   background-color: var(--white-color);
   border-radius: 8px;

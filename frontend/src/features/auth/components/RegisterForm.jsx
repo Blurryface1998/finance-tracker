@@ -7,7 +7,6 @@ import { formatServerError } from "../../../shared/utils/errorMessages";
 import FormField from "./FormField/FormField";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { minimumLoadingTime } from "../../../shared/utils/loading";
 import Loader from "../../../shared/components/Loader/Loader";
 import "./RegisterForm.scss";
 
