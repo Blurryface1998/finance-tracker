@@ -29,7 +29,7 @@ function AddTransactionForm({ onTransactionCreate, onClose }) {
   };
 
   return (
-    <>
+    <div className="addTransactionForm">
       {isLoading && <Loader />}
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="description">Description:</label>
@@ -48,12 +48,12 @@ function AddTransactionForm({ onTransactionCreate, onClose }) {
         />
         <label htmlFor="transaction_type">Select Type:</label>
         <select {...register("transaction_type")}>
-          <option value="income">income</option>
-          <option value="expense">expense</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
         </select>
         <ButtonLink type="submit">Submit</ButtonLink>
       </form>
-    </>
+    </div>
   );
 }
 

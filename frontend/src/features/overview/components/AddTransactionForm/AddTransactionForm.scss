@@ -1,9 +1,13 @@
 @use "../../../../styles/utilities" as *;
 @use "../../../../styles/typography" as *;
 
+.addTransactionForm {
+  @include flex-center;
+  justify-content: center;
+}
+
 form {
   width: 100%;
-  max-width: 400px;
   @include flex-column;
   gap: 0.5rem;
   label {
@@ -26,6 +30,8 @@ form {
     border-color: var(--gray-color-02);
   }
   select {
+    option {
+    }
   }
   button {
   }

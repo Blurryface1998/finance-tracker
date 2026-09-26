@@ -12,12 +12,6 @@ function RecentTransaction({
   onTransactionTypeChange,
   openAddTransaction,
 }) {
-  const filters = [
-    { label: "all", value: "all" },
-    { label: "income", value: "income" },
-    { label: "expenses", value: "expense" },
-  ];
-  if (loading) return <p>loading</p>;
   return (
     <div className="transaction">
       <div className="transaction__header">

@@ -1,10 +1,12 @@
+import { useAuth } from "../../../features/auth/hooks/useAuth";
 import ChevronRight from "../../../assets/chevrons-right.svg";
 import Bell from "../../../assets/Bell.svg";
 import Notification from "../../../assets/Notification-icon.svg";
 import Search from "../../../assets/Search.svg";
 import HamburgerMenu from "../../../assets/menu/hamburger-menu.svg";
 import Close from "../../../assets/menu/x.svg";
-import { useAuth } from "../../../features/auth/hooks/useAuth";
+import ButtonLink from "../ButtonLink/ButtonLink";
+import AddTransactionImg from "../../../assets/button-icons/add-transaction.svg";
 import "./OverviewHeader.scss";
 
 function OverviewHeader({
@@ -12,6 +14,7 @@ function OverviewHeader({
   isSidebarOpen,
   onSearchClick,
   isSearchOpen,
+  openAddTransaction,
 }) {
   const { user } = useAuth();
   const today = new Date();
@@ -64,6 +67,13 @@ function OverviewHeader({
       </div>
 
       <div className="overview-header__desktop-actions">
+        <button
+          type="button"
+          className="addTransaction"
+          onClick={() => openAddTransaction(true)}
+        >
+          <img src={AddTransactionImg} alt="Add transaction icon" />
+        </button>
         <button type="button" className="overview-header__notification-button">
           <img src={Notification} alt="" />
         </button>

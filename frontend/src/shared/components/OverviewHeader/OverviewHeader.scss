@@ -111,6 +111,11 @@
 
     &__desktop-actions {
       @include flex-center;
+      gap: 8px;
+
+      .addTransaction {
+        cursor: pointer;
+      }
     }
     &__notification-button {
       margin-right: 40px;
