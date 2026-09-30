@@ -30,8 +30,21 @@ form {
     border-color: var(--gray-color-02);
   }
   select {
+    background-color: transparent;
+    border: 1px solid var(--gray-color-01);
+    @include regular-16-24;
+    padding: 0.75rem 1rem;
+    width: 50%;
+    border-radius: 9px;
+    margin-bottom: 1rem;
+    color: var(--gray-color-01);
     option {
+      @include bold-16-24;
     }
+  }
+  span {
+    color: var(--red-color);
+    font-size: 1rem;
   }
   button {
   }
